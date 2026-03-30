@@ -1,0 +1,306 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-swag-store-api",
+    "name": "Vercel Swag Store API",
+    "description": "Example requests for the certification Swag Store REST API.\n\n**Setup:** Set the collection variable `protectionBypass` to your Vercel deployment protection bypass value (see `docs/assignment/api-1.json`). All requests send it as `x-vercel-protection-bypass`.\n\n**Cart flow:** Run **Create cart** first; the test script stores `x-cart-token` into the `cartToken` collection variable for the other cart requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://vercel-swag-store-api.vercel.app/api"
+    },
+    {
+      "key": "protectionBypass",
+      "value": ""
+    },
+    {
+      "key": "cartToken",
+      "value": ""
+    },
+    {
+      "key": "productSlug",
+      "value": "matte-black-stainless-steel-water-bottle"
+    },
+    {
+      "key": "productId",
+      "value": "bottle_001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & store",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/health",
+            "description": "Liveness / readiness probe."
+          }
+        },
+        {
+          "name": "Store config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/store/config",
+            "description": "Store name, features, SEO defaults, etc."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "item": [
+        {
+          "name": "List categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/categories",
+            "description": "All product categories."
+          }
+        },
+        {
+          "name": "List products (default pagination)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products",
+            "description": "First page, default limit."
+          }
+        },
+        {
+          "name": "List products — featured",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products?featured=true&limit=10",
+            "description": "Featured products only."
+          }
+        },
+        {
+          "name": "List products — search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products?search=water+bottle&limit=5",
+            "description": "Search by name, description, or tags."
+          }
+        },
+        {
+          "name": "List products — category bottles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products?category=bottles",
+            "description": "Filter by category slug."
+          }
+        },
+        {
+          "name": "Get product by slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products/{{productSlug}}",
+            "description": "`productSlug` may also be a product id (e.g. bottle_001)."
+          }
+        },
+        {
+          "name": "Get product stock",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/products/{{productSlug}}/stock",
+            "description": "Real-time stock for the product."
+          }
+        },
+        {
+          "name": "Promotions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/promotions",
+            "description": "Active promotional banner payload."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Create cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const token = pm.response.headers.get('x-cart-token');",
+                  "if (token) {",
+                  "  pm.collectionVariables.set('cartToken', token);",
+                  "  console.log('Saved cartToken to collection variables');",
+                  "} else {",
+                  "  console.warn('No x-cart-token header on response');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              }
+            ],
+            "url": "{{baseUrl}}/cart/create",
+            "description": "Creates an empty cart. Copies `x-cart-token` from the response into `cartToken` via the Tests script."
+          }
+        },
+        {
+          "name": "Get cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              },
+              {
+                "key": "x-cart-token",
+                "value": "{{cartToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/cart",
+            "description": "Requires `cartToken` (run Create cart first)."
+          }
+        },
+        {
+          "name": "Add item to cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              },
+              {
+                "key": "x-cart-token",
+                "value": "{{cartToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"quantity\": 2\n}"
+            },
+            "url": "{{baseUrl}}/cart",
+            "description": "Add line item; adjust `productId` / quantity as needed."
+          }
+        },
+        {
+          "name": "Update cart item quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              },
+              {
+                "key": "x-cart-token",
+                "value": "{{cartToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": "{{baseUrl}}/cart/{{productId}}",
+            "description": "Path uses the cart line’s product id. Set quantity to `0` to remove."
+          }
+        },
+        {
+          "name": "Remove cart item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "x-vercel-protection-bypass",
+                "value": "{{protectionBypass}}"
+              },
+              {
+                "key": "x-cart-token",
+                "value": "{{cartToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/cart/{{productId}}",
+            "description": "Remove line for `productId` from the cart."
+          }
+        }
+      ]
+    }
+  ]
+}
