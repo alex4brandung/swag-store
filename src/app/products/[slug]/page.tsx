@@ -6,9 +6,18 @@ import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { getProduct } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
+import { AddToCartSection } from "@/components/add-to-cart-section";
 
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+async function stubAddToCart(
+  _productId: string,
+  _quantity: number
+): Promise<{ success: boolean; error?: string }> {
+  "use server";
+  return { success: false, error: "Cart not yet implemented" };
 }
 
 async function fetchProduct(slug: string) {
@@ -119,10 +128,21 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
             {product.description}
           </p>
 
-          {/* Stock + Add to Cart will be added in the next step */}
-          <div className="text-sm text-[var(--muted-foreground)]">
-            Loading availability...
-          </div>
+          {/* Stock + Add to Cart (dynamic, streams after product shell) */}
+          <Suspense
+            fallback={
+              <div className="flex flex-col gap-4 animate-pulse">
+                <div className="h-4 bg-[var(--border)] rounded w-36" />
+                <div className="h-12 bg-[var(--border)] rounded w-40" />
+              </div>
+            }
+          >
+            <AddToCartSection
+              productId={product.id}
+              slug={product.slug}
+              addToCartAction={stubAddToCart}
+            />
+          </Suspense>
 
           {/* Tags */}
           {product.tags.length > 0 && (
