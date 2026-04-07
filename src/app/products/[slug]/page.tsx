@@ -7,18 +7,12 @@ import { cacheTag } from "next/cache";
 import { getProduct } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartSection } from "@/components/add-to-cart-section";
+import { addToCartAction } from "@/lib/cart-actions";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-async function stubAddToCart(
-  _productId: string,
-  _quantity: number
-): Promise<{ success: boolean; error?: string }> {
-  "use server";
-  return { success: false, error: "Cart not yet implemented" };
-}
 
 async function fetchProduct(slug: string) {
   "use cache";
@@ -140,7 +134,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
             <AddToCartSection
               productId={product.id}
               slug={product.slug}
-              addToCartAction={stubAddToCart}
+              addToCartAction={addToCartAction}
             />
           </Suspense>
 
