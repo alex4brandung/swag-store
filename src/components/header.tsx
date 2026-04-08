@@ -1,4 +1,34 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { getCartAction } from "@/lib/cart-actions";
+import { CartSheet } from "./cart/cart-sheet";
+
+async function CartWrapper() {
+  const cart = await getCartAction();
+  return <CartSheet initialCart={cart} />;
+}
+
+function CartFallback() {
+  return (
+    <div className="relative flex items-center text-[var(--muted-foreground)]">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+    </div>
+  );
+}
 
 export function Header() {
   return (
@@ -27,7 +57,9 @@ export function Header() {
           >
             Search
           </Link>
-          {/* Cart icon will be added later */}
+          <Suspense fallback={<CartFallback />}>
+            <CartWrapper />
+          </Suspense>
         </nav>
       </div>
     </header>
