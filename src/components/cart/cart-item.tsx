@@ -36,9 +36,9 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
 
   return (
     <div
-      className={`flex gap-3 py-4 border-b border-[var(--border)] ${isPending ? "opacity-50" : ""}`}
+      className={`flex gap-3 py-4 border-b border-border ${isPending ? "opacity-50" : ""}`}
     >
-      <div className="relative h-16 w-16 flex-shrink-0 rounded-md overflow-hidden bg-[var(--muted)]">
+      <div className="relative h-16 w-16 shrink-0 rounded-md overflow-hidden bg-muted">
         {item.product.images[0] && (
           <Image
             src={item.product.images[0]}
@@ -50,10 +50,10 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[var(--foreground)] truncate">
+        <p className="text-sm font-medium text-foreground truncate">
           {item.product.name}
         </p>
-        <p className="text-sm text-[var(--muted-foreground)] mt-0.5">
+        <p className="text-sm text-muted-foreground mt-0.5">
           {formatPrice(item.product.price, item.product.currency)}
         </p>
         <div className="flex items-center gap-2 mt-2">
@@ -61,7 +61,7 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
             onClick={() => handleQuantityChange(item.quantity - 1)}
             disabled={isPending}
             aria-label="Decrease quantity"
-            className="flex h-6 w-6 items-center justify-center rounded border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)] disabled:opacity-50 cursor-pointer"
+            className="flex h-6 w-6 items-center justify-center rounded border border-border text-foreground hover:bg-muted disabled:opacity-50 cursor-pointer"
           >
             −
           </button>
@@ -70,21 +70,21 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
             onClick={() => handleQuantityChange(item.quantity + 1)}
             disabled={isPending}
             aria-label="Increase quantity"
-            className="flex h-6 w-6 items-center justify-center rounded border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)] disabled:opacity-50 cursor-pointer"
+            className="flex h-6 w-6 items-center justify-center rounded border border-border text-foreground hover:bg-muted disabled:opacity-50 cursor-pointer"
           >
             +
           </button>
         </div>
       </div>
       <div className="flex flex-col items-end justify-between">
-        <span className="text-sm font-medium text-[var(--foreground)]">
+        <span className="text-sm font-medium text-foreground">
           {formatPrice(item.lineTotal, item.product.currency)}
         </span>
         <button
           onClick={handleRemove}
           disabled={isPending}
           aria-label="Remove item"
-          className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] disabled:opacity-50 cursor-pointer"
+          className="text-muted-foreground hover:text-foreground disabled:opacity-50 cursor-pointer"
         >
           <TrashIcon />
         </button>

@@ -24,9 +24,9 @@ export function Hero() {
       />
 
       <div className="relative max-w-7xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-1.5 mb-8">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-1.5 mb-8">
           <VercelTriangle size={10} />
-          <span className="text-xs text-[var(--muted-foreground)] font-medium">
+          <span className="text-xs text-muted-foreground font-medium">
             Official Vercel Merchandise
           </span>
         </div>
@@ -34,10 +34,10 @@ export function Hero() {
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
           Gear Up,
           <br />
-          <span className="text-[var(--muted-foreground)]">Ship Faster.</span>
+          <span className="text-muted-foreground">Ship Faster.</span>
         </h1>
 
-        <p className="mt-6 text-base sm:text-lg text-[var(--muted-foreground)] max-w-xl mx-auto leading-relaxed">
+        <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
           Premium developer apparel and accessories from the team that brings
           you Next.js and the best deployment platform on the web.
         </p>
@@ -52,7 +52,7 @@ export function Hero() {
           </Link>
           <Link
             href="/search?category=t-shirts"
-            className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] text-[var(--foreground)] font-medium px-6 py-3 text-sm hover:border-[#555] hover:bg-[var(--muted)] transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-border text-foreground font-medium px-6 py-3 text-sm hover:border-[#555] hover:bg-muted transition-colors"
           >
             Browse Apparel
           </Link>

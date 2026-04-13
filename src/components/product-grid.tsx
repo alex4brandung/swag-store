@@ -14,7 +14,7 @@ export async function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
 
   if (products.length === 0) {
     return (
-      <p className="text-[var(--muted-foreground)] text-sm text-center py-8">
+      <p className="text-muted-foreground text-sm text-center py-8">
         No featured products available.
       </p>
     );

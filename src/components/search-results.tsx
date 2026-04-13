@@ -19,14 +19,14 @@ export async function SearchResults({ query, category }: SearchResultsProps) {
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--muted)] border border-[var(--border)]">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted border border-border">
           <SearchEmptyIcon />
         </div>
         <div className="text-center">
-          <p className="font-medium text-[var(--foreground)]">
+          <p className="font-medium text-foreground">
             No products found
           </p>
-          <p className="text-sm text-[var(--muted-foreground)] mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {query
               ? `No results for "${query}". Try a different search term.`
               : "No products match the selected filters."}
@@ -39,7 +39,7 @@ export async function SearchResults({ query, category }: SearchResultsProps) {
   return (
     <div>
       {!isDefaultState && (
-        <p className="text-sm text-[var(--muted-foreground)] mb-5">
+        <p className="text-sm text-muted-foreground mb-5">
           {products.length} result{products.length !== 1 ? "s" : ""}
           {query ? ` for "${query}"` : ""}
           {category ? ` in ${category}` : ""}
@@ -66,7 +66,7 @@ function SearchEmptyIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="text-[var(--muted-foreground)]"
+      className="text-muted-foreground"
     >
       <circle cx="11" cy="11" r="8" />
       <line x1="21" y1="21" x2="16.65" y2="16.65" />

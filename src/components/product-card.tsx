@@ -11,7 +11,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group flex flex-col rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)] hover:border-[#444448] transition-colors"
+      className="group flex flex-col rounded-xl overflow-hidden border border-border bg-muted hover:border-[#444448] transition-colors"
     >
       <div className="relative aspect-square bg-[#222226] overflow-hidden">
         {product.images[0] ? (
@@ -29,13 +29,13 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
       <div className="p-4 flex flex-col gap-1 flex-1">
-        <span className="text-xs text-[var(--muted-foreground)] uppercase tracking-wide">
+        <span className="text-xs text-muted-foreground uppercase tracking-wide">
           {product.category}
         </span>
-        <h3 className="text-sm font-medium text-[var(--foreground)] group-hover:text-white transition-colors leading-snug">
+        <h3 className="text-sm font-medium text-foreground group-hover:text-white transition-colors leading-snug">
           {product.name}
         </h3>
-        <p className="mt-auto pt-2 text-sm font-semibold text-[var(--foreground)]">
+        <p className="mt-auto pt-2 text-sm font-semibold text-foreground">
           {formatPrice(product.price, product.currency)}
         </p>
       </div>
@@ -51,7 +51,7 @@ function PlaceholderIcon() {
       viewBox="0 0 76 65"
       fill="currentColor"
       aria-hidden="true"
-      className="text-[var(--border)]"
+      className="text-border"
     >
       <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
     </svg>

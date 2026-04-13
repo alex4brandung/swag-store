@@ -41,7 +41,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open cart"
-        className="relative flex items-center text-[var(--foreground)] hover:text-white cursor-pointer"
+        className="relative flex items-center text-foreground hover:text-white cursor-pointer"
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (
@@ -62,14 +62,14 @@ export function CartSheet({ initialCart }: CartSheetProps) {
       <dialog
         ref={dialogRef}
         onClose={() => setIsOpen(false)}
-        className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#1c1c1f] border-l border-[var(--border)] z-50 m-0 p-0 open:flex open:flex-col"
+        className="fixed right-0 top-0 h-full w-full max-w-sm bg-[#1c1c1f] border-l border-border z-50 m-0 p-0 open:flex open:flex-col"
         aria-label="Shopping cart"
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border)]">
-          <h2 className="text-base font-semibold text-[var(--foreground)]">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <h2 className="text-base font-semibold text-foreground">
             Cart
             {cart && cart.totalItems > 0 && (
-              <span className="ml-2 text-sm text-[var(--muted-foreground)] font-normal">
+              <span className="ml-2 text-sm text-muted-foreground font-normal">
                 ({cart.totalItems} {cart.totalItems === 1 ? "item" : "items"})
               </span>
             )}
@@ -77,7 +77,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close cart"
-            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] cursor-pointer"
+            className="text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <CloseIcon />
           </button>
@@ -87,7 +87,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
           {!cart || cart.items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               <ShoppingBagIcon />
-              <p className="text-sm text-[var(--muted-foreground)]">
+              <p className="text-sm text-muted-foreground">
                 Your cart is empty
               </p>
             </div>
@@ -103,12 +103,12 @@ export function CartSheet({ initialCart }: CartSheetProps) {
         </div>
 
         {cart && cart.items.length > 0 && (
-          <div className="px-5 py-5 border-t border-[var(--border)]">
+          <div className="px-5 py-5 border-t border-border">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-[var(--muted-foreground)]">
+              <span className="text-sm text-muted-foreground">
                 Subtotal
               </span>
-              <span className="text-base font-semibold text-[var(--foreground)]">
+              <span className="text-base font-semibold text-foreground">
                 {formatPrice(cart.subtotal, cart.currency)}
               </span>
             </div>

@@ -10,7 +10,7 @@ async function CartWrapper() {
 
 function CartFallback() {
   return (
-    <div className="relative flex items-center text-[var(--muted-foreground)]">
+    <div className="relative flex items-center text-muted-foreground">
       <svg
         width="20"
         height="20"
@@ -32,11 +32,11 @@ function CartFallback() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2.5 text-[var(--foreground)] hover:text-white transition-colors"
+          className="flex items-center gap-2.5 text-foreground hover:text-white transition-colors"
         >
           <VercelTriangle />
           <span className="text-sm font-semibold tracking-tight">
@@ -47,13 +47,13 @@ export function Header() {
         <nav className="flex items-center gap-6">
           <Link
             href="/"
-            className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Home
           </Link>
           <Link
             href="/search"
-            className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             Search
           </Link>

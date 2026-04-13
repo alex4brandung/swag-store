@@ -51,7 +51,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#171719" />
         <meta name="generator" content="vswag-cert-v3" />
       </head>
-      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

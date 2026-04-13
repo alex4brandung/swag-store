@@ -4,11 +4,11 @@ export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center gap-6">
       <div className="flex flex-col items-center gap-3">
-        <span className="text-6xl font-bold text-[var(--border)]">404</span>
-        <h1 className="text-xl font-semibold text-[var(--foreground)]">
+        <span className="text-6xl font-bold text-border">404</span>
+        <h1 className="text-xl font-semibold text-foreground">
           Page not found
         </h1>
-        <p className="text-sm text-[var(--muted-foreground)] max-w-sm">
+        <p className="text-sm text-muted-foreground max-w-sm">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
       </div>
@@ -21,7 +21,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/search"
-          className="rounded-lg border border-[var(--border)] text-[var(--foreground)] font-medium px-5 py-2.5 text-sm hover:bg-[var(--muted)] transition-colors"
+          className="rounded-lg border border-border text-foreground font-medium px-5 py-2.5 text-sm hover:bg-muted transition-colors"
         >
           Browse products
         </Link>

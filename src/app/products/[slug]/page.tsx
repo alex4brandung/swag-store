@@ -51,11 +51,11 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+        <ol className="flex items-center gap-2 text-sm text-muted-foreground">
           <li>
             <Link
               href="/"
-              className="hover:text-[var(--foreground)] transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Home
             </Link>
@@ -64,13 +64,13 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
           <li>
             <Link
               href={`/search?category=${product.category}`}
-              className="hover:text-[var(--foreground)] transition-colors capitalize"
+              className="hover:text-foreground transition-colors capitalize"
             >
               {product.category}
             </Link>
           </li>
           <li aria-hidden="true">/</li>
-          <li className="text-[var(--foreground)] truncate max-w-[200px]">
+          <li className="text-foreground truncate max-w-[200px]">
             {product.name}
           </li>
         </ol>
@@ -78,7 +78,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Product Image */}
-        <div className="relative aspect-square rounded-2xl overflow-hidden bg-[var(--muted)] border border-[var(--border)]">
+        <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted border border-border">
           {product.images[0] ? (
             <Image
               src={product.images[0]}
@@ -96,7 +96,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
                 viewBox="0 0 76 65"
                 fill="currentColor"
                 aria-hidden="true"
-                className="text-[var(--border)]"
+                className="text-border"
               >
                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
               </svg>
@@ -107,18 +107,18 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
         {/* Product Info */}
         <div className="flex flex-col gap-6">
           <div>
-            <span className="text-xs font-medium uppercase tracking-widest text-[var(--muted-foreground)]">
+            <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
               {product.category}
             </span>
             <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-white leading-tight">
               {product.name}
             </h1>
-            <p className="mt-3 text-2xl font-semibold text-[var(--foreground)]">
+            <p className="mt-3 text-2xl font-semibold text-foreground">
               {formatPrice(product.price, product.currency)}
             </p>
           </div>
 
-          <p className="text-[var(--muted-foreground)] leading-relaxed text-sm sm:text-base">
+          <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
             {product.description}
           </p>
 
@@ -126,8 +126,8 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
           <Suspense
             fallback={
               <div className="flex flex-col gap-4 animate-pulse">
-                <div className="h-4 bg-[var(--border)] rounded w-36" />
-                <div className="h-12 bg-[var(--border)] rounded w-40" />
+                <div className="h-4 bg-border rounded w-36" />
+                <div className="h-12 bg-border rounded w-40" />
               </div>
             }
           >
@@ -144,7 +144,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
               {product.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted-foreground)]"
+                  className="inline-flex items-center rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
                 >
                   {tag}
                 </span>
@@ -161,19 +161,19 @@ function ProductSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-pulse">
       <div className="flex gap-2 mb-8">
-        <div className="h-4 bg-[var(--border)] rounded w-10" />
-        <div className="h-4 bg-[var(--border)] rounded w-2" />
-        <div className="h-4 bg-[var(--border)] rounded w-16" />
+        <div className="h-4 bg-border rounded w-10" />
+        <div className="h-4 bg-border rounded w-2" />
+        <div className="h-4 bg-border rounded w-16" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-        <div className="aspect-square rounded-2xl bg-[var(--muted)] border border-[var(--border)]" />
+        <div className="aspect-square rounded-2xl bg-muted border border-border" />
         <div className="flex flex-col gap-6">
-          <div className="h-3 bg-[var(--border)] rounded w-16" />
-          <div className="h-8 bg-[var(--border)] rounded w-3/4" />
-          <div className="h-7 bg-[var(--border)] rounded w-20" />
+          <div className="h-3 bg-border rounded w-16" />
+          <div className="h-8 bg-border rounded w-3/4" />
+          <div className="h-7 bg-border rounded w-20" />
           <div className="space-y-2">
-            <div className="h-4 bg-[var(--border)] rounded w-full" />
-            <div className="h-4 bg-[var(--border)] rounded w-5/6" />
+            <div className="h-4 bg-border rounded w-full" />
+            <div className="h-4 bg-border rounded w-5/6" />
           </div>
         </div>
       </div>

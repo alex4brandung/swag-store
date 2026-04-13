@@ -58,7 +58,7 @@ export function SearchInput({ defaultValue = "" }: SearchInputProps) {
   return (
     <div className="relative flex items-center gap-2">
       <div className="relative flex-1">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] pointer-events-none">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
           <SearchIcon />
         </div>
         <input
@@ -68,14 +68,14 @@ export function SearchInput({ defaultValue = "" }: SearchInputProps) {
           onKeyDown={handleKeyDown}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full rounded-lg border border-[var(--border)] bg-[var(--muted)] pl-10 pr-10 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:outline-none focus:border-[#555] transition-colors"
+          className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[#555] transition-colors"
         />
         {value && (
           <button
             type="button"
             onClick={handleClear}
             aria-label="Clear search"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] cursor-pointer"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
           >
             <CloseIcon />
           </button>

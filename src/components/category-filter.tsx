@@ -32,7 +32,7 @@ export function CategoryFilter({
         value={selectedCategory}
         onChange={handleChange}
         aria-label="Filter by category"
-        className="appearance-none rounded-lg border border-[var(--border)] bg-[var(--muted)] pl-3 pr-8 py-2.5 text-sm text-[var(--foreground)] focus:outline-none focus:border-[#555] transition-colors cursor-pointer"
+        className="appearance-none rounded-lg border border-border bg-muted pl-3 pr-8 py-2.5 text-sm text-foreground focus:outline-none focus:border-[#555] transition-colors cursor-pointer"
       >
         <option value="">All categories</option>
         {categories.map((cat) => (
@@ -41,7 +41,7 @@ export function CategoryFilter({
           </option>
         ))}
       </select>
-      <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)]">
+      <div className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground">
         <ChevronDownIcon />
       </div>
     </div>

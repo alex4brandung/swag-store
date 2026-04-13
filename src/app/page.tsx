@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 
 function PromoBannerSkeleton() {
   return (
-    <div className="border-y border-[var(--border)] bg-[var(--muted)] py-3 animate-pulse">
+    <div className="border-y border-border bg-muted py-3 animate-pulse">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="h-4 bg-[var(--border)] rounded mx-auto w-80" />
+        <div className="h-4 bg-border rounded mx-auto w-80" />
       </div>
     </div>
   );
@@ -31,13 +31,13 @@ function ProductGridSkeleton() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
-          className="rounded-xl border border-[var(--border)] bg-[var(--muted)] overflow-hidden animate-pulse"
+          className="rounded-xl border border-border bg-muted overflow-hidden animate-pulse"
         >
-          <div className="aspect-square bg-[var(--border)]" />
+          <div className="aspect-square bg-border" />
           <div className="p-4 space-y-2">
-            <div className="h-3 bg-[var(--border)] rounded w-16" />
-            <div className="h-4 bg-[var(--border)] rounded w-3/4" />
-            <div className="h-4 bg-[var(--border)] rounded w-16 mt-2" />
+            <div className="h-3 bg-border rounded w-16" />
+            <div className="h-4 bg-border rounded w-3/4" />
+            <div className="h-4 bg-border rounded w-16 mt-2" />
           </div>
         </div>
       ))}
@@ -56,12 +56,12 @@ export default function HomePage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xl font-semibold text-[var(--foreground)]">
+          <h2 className="text-xl font-semibold text-foreground">
             Featured Products
           </h2>
           <a
             href="/search"
-            className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             View all &rarr;
           </a>

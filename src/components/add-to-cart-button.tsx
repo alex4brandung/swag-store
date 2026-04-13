@@ -49,7 +49,7 @@ export function AddToCartButton({
     <div className="flex flex-col gap-4">
       {inStock && (
         <div className="flex items-center gap-3">
-          <span className="text-sm text-[var(--muted-foreground)]">
+          <span className="text-sm text-muted-foreground">
             Quantity
           </span>
           <QuantitySelector
