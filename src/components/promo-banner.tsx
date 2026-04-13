@@ -11,30 +11,34 @@ export async function PromoBanner() {
   if (!promo || !promo.active) return null;
 
   return (
-    <div className="border-y border-border bg-muted py-3">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-center text-sm text-foreground">
-          <span className="font-semibold">{promo.title}</span>
-          <span className="mx-2 text-muted-foreground">&middot;</span>
-          <span className="text-muted-foreground">
-            {promo.description}
-          </span>
-          {promo.code && (
-            <>
-              <span className="mx-2 text-muted-foreground">
-                &middot;
+    <div className="grid animate-promo-banner-reveal motion-reduce:animate-none motion-reduce:grid-rows-[1fr]">
+      <div className="min-h-0 overflow-hidden">
+        <div className="border-y border-border bg-muted py-3">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-center text-sm text-foreground">
+              <span className="font-semibold">{promo.title}</span>
+              <span className="mx-2 text-muted-foreground">&middot;</span>
+              <span className="text-muted-foreground">
+                {promo.description}
               </span>
-              <span className="inline-flex items-center gap-1">
-                <span className="text-muted-foreground text-xs">
-                  Code:
-                </span>
-                <code className="rounded bg-background border border-border px-2 py-0.5 text-xs font-mono font-semibold tracking-wide text-white">
-                  {promo.code}
-                </code>
-              </span>
-            </>
-          )}
-        </p>
+              {promo.code && (
+                <>
+                  <span className="mx-2 text-muted-foreground">
+                    &middot;
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-muted-foreground text-xs">
+                      Code:
+                    </span>
+                    <code className="rounded bg-background border border-border px-2 py-0.5 text-xs font-mono font-semibold tracking-wide text-white">
+                      {promo.code}
+                    </code>
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

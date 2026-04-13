@@ -15,16 +15,6 @@ export const metadata: Metadata = {
   },
 };
 
-function PromoBannerSkeleton() {
-  return (
-    <div className="border-y border-border bg-muted py-3 animate-pulse">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="h-4 bg-border rounded mx-auto w-80" />
-      </div>
-    </div>
-  );
-}
-
 function ProductGridSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -48,7 +38,7 @@ function ProductGridSkeleton() {
 export default function HomePage() {
   return (
     <>
-      <Suspense fallback={<PromoBannerSkeleton />}>
+      <Suspense fallback={null}>
         <PromoBanner />
       </Suspense>
 
