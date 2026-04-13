@@ -59,14 +59,8 @@ export function Hero() {
                   href="/search"
                   className="inline-flex items-center gap-2 rounded-lg bg-white text-[#171719] font-semibold px-6 py-3 text-sm hover:bg-gray-100 transition-colors"
                 >
-                  Shop All Products
+                  Browse All Products
                   <ArrowRightIcon />
-                </Link>
-                <Link
-                  href="/search?category=t-shirts"
-                  className="inline-flex items-center gap-2 rounded-lg border border-border text-foreground font-medium px-6 py-3 text-sm hover:border-[#555] hover:bg-muted transition-colors"
-                >
-                  Browse Apparel
                 </Link>
               </div>
             </div>
