@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Hero } from "@/components/hero";
-import { PromoBanner } from "@/components/promo-banner";
+import { PromoBanner, PromoBannerSkeleton } from "@/components/promo-banner";
 import { FeaturedProducts } from "@/components/product-grid";
 
 export const metadata: Metadata = {
@@ -38,7 +38,7 @@ function ProductGridSkeleton() {
 export default function HomePage() {
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<PromoBannerSkeleton />}>
         <PromoBanner />
       </Suspense>
 

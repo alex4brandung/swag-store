@@ -12,15 +12,6 @@
   }
 }
 
-@keyframes promo-banner-reveal-rows {
-  from {
-    grid-template-rows: 0fr;
-  }
-  to {
-    grid-template-rows: 1fr;
-  }
-}
-
 :root {
   --background: #171719;
   --foreground: #ededed;
@@ -41,7 +32,6 @@
   --color-accent-foreground: var(--accent-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --animate-promo-banner-reveal: promo-banner-reveal-rows 500ms ease forwards;
 }
 
 body {
