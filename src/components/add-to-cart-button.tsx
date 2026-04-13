@@ -65,6 +65,7 @@ export function AddToCartButton({
         type="button"
         onClick={handleAddToCart}
         disabled={!inStock || isPending}
+        aria-label={!inStock ? "Add to cart — out of stock" : undefined}
         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-white text-[#171719] font-semibold px-8 py-3 text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
         {isPending ? (
@@ -72,8 +73,6 @@ export function AddToCartButton({
             <SpinnerIcon />
             Adding...
           </>
-        ) : !inStock ? (
-          "Out of Stock"
         ) : (
           "Add to Cart"
         )}
