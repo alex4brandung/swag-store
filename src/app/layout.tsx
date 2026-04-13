@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { getSiteUrl } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   },
   description:
     "Official Vercel merchandise. Premium developer apparel, accessories, and gear.",
-  metadataBase: new URL("https://swag.vercel.app"),
+  metadataBase: new URL(getSiteUrl()),
   openGraph: {
     type: "website",
     siteName: "Vercel Swag Store",
