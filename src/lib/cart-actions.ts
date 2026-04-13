@@ -63,13 +63,13 @@ export async function addToCartAction(
 export async function updateCartItemAction(
   itemId: string,
   quantity: number
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: true; cart: CartWithProducts } | { success: false; error: string }> {
   try {
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
-    await updateItem(token, itemId, quantity);
+    const cart = await updateItem(token, itemId, quantity);
     revalidatePath("/", "layout");
-    return { success: true };
+    return { success: true, cart };
   } catch (err) {
     return {
       success: false,
@@ -80,13 +80,13 @@ export async function updateCartItemAction(
 
 export async function removeCartItemAction(
   itemId: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: true; cart: CartWithProducts } | { success: false; error: string }> {
   try {
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
-    await removeItem(token, itemId);
+    const cart = await removeItem(token, itemId);
     revalidatePath("/", "layout");
-    return { success: true };
+    return { success: true, cart };
   } catch (err) {
     return {
       success: false,

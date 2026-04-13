@@ -1,39 +1,40 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import type { CartWithProducts } from "@/lib/types";
 import { CartItem } from "./cart-item";
-import { getCartAction } from "@/lib/cart-actions";
 
 interface CartSheetProps {
   initialCart: CartWithProducts | null;
 }
 
 export function CartSheet({ initialCart }: CartSheetProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [cart, setCart] = useState<CartWithProducts | null>(initialCart);
-  const [isPending, startTransition] = useTransition();
   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const handleCartUpdated = useCallback(
+    (next: CartWithProducts) => {
+      setCart(next);
+      router.refresh();
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    setCart(initialCart);
+  }, [initialCart]);
 
   useEffect(() => {
     if (isOpen) {
       dialogRef.current?.showModal();
-      startTransition(async () => {
-        const updated = await getCartAction();
-        setCart(updated);
-      });
     } else {
       dialogRef.current?.close();
     }
   }, [isOpen]);
-
-  function refreshCart() {
-    startTransition(async () => {
-      const updated = await getCartAction();
-      setCart(updated);
-    });
-  }
 
   return (
     <>
@@ -83,14 +84,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
         </div>
 
         <div className="flex-1 overflow-y-auto px-5">
-          {isPending && (
-            <div className="flex items-center justify-center py-12">
-              <span className="text-sm text-[var(--muted-foreground)]">
-                Loading...
-              </span>
-            </div>
-          )}
-          {!isPending && (!cart || cart.items.length === 0) ? (
+          {!cart || cart.items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               <ShoppingBagIcon />
               <p className="text-sm text-[var(--muted-foreground)]">
@@ -98,18 +92,17 @@ export function CartSheet({ initialCart }: CartSheetProps) {
               </p>
             </div>
           ) : (
-            !isPending &&
-            cart?.items.map((item) => (
+            cart.items.map((item) => (
               <CartItem
                 key={item.productId}
                 item={item}
-                onMutationComplete={refreshCart}
+                onCartUpdated={handleCartUpdated}
               />
             ))
           )}
         </div>
 
-        {!isPending && cart && cart.items.length > 0 && (
+        {cart && cart.items.length > 0 && (
           <div className="px-5 py-5 border-t border-[var(--border)]">
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm text-[var(--muted-foreground)]">

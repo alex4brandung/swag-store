@@ -4,31 +4,33 @@ import Image from "next/image";
 import { useTransition } from "react";
 import { removeCartItemAction, updateCartItemAction } from "@/lib/cart-actions";
 import { formatPrice } from "@/lib/utils";
-import type { CartItemWithProduct } from "@/lib/types";
+import type { CartItemWithProduct, CartWithProducts } from "@/lib/types";
 
 interface CartItemProps {
   item: CartItemWithProduct;
-  onMutationComplete?: () => void;
+  onCartUpdated: (cart: CartWithProducts) => void;
 }
 
-export function CartItem({ item, onMutationComplete }: CartItemProps) {
+export function CartItem({ item, onCartUpdated }: CartItemProps) {
   const [isPending, startTransition] = useTransition();
 
   function handleQuantityChange(newQty: number) {
     startTransition(async () => {
-      if (newQty < 1) {
-        await removeCartItemAction(item.productId);
-      } else {
-        await updateCartItemAction(item.productId, newQty);
+      const result = newQty < 1
+        ? await removeCartItemAction(item.productId)
+        : await updateCartItemAction(item.productId, newQty);
+      if (result.success) {
+        onCartUpdated(result.cart);
       }
-      onMutationComplete?.();
     });
   }
 
   function handleRemove() {
     startTransition(async () => {
-      await removeCartItemAction(item.productId);
-      onMutationComplete?.();
+      const result = await removeCartItemAction(item.productId);
+      if (result.success) {
+        onCartUpdated(result.cart);
+      }
     });
   }
 
