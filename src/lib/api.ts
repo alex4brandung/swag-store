@@ -7,18 +7,37 @@ import type {
   StockInfo,
 } from "@/lib/types";
 
-const BASE_URL = process.env.SWAG_API_BASE_URL!;
-const BYPASS_TOKEN = process.env.SWAG_API_BYPASS_TOKEN!;
+function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
+  const baseUrl = process.env.SWAG_API_BASE_URL?.trim() ?? "";
+  const bypassToken = process.env.SWAG_API_BYPASS_TOKEN?.trim() ?? "";
+  const missing: string[] = [];
+  if (!baseUrl) missing.push("SWAG_API_BASE_URL");
+  if (!bypassToken) missing.push("SWAG_API_BYPASS_TOKEN");
+
+  if (missing.length > 0) {
+    console.warn(
+      "[swag-store] Missing environment variable(s):",
+      missing.join(", "),
+      "— set them in .env.local or Vercel → Project → Settings → Environment Variables.",
+    );
+    throw new Error(
+      `Missing required environment variables: ${missing.join(", ")}`,
+    );
+  }
+
+  return { baseUrl, bypassToken };
+}
 
 async function apiFetch<T>(
   path: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const url = `${BASE_URL}${path}`;
+  const { baseUrl, bypassToken } = getSwagApiEnv();
+  const url = `${baseUrl}${path}`;
   const res = await fetch(url, {
     ...options,
     headers: {
-      "x-vercel-protection-bypass": BYPASS_TOKEN,
+      "x-vercel-protection-bypass": bypassToken,
       "Content-Type": "application/json",
       ...options.headers,
     },
@@ -92,11 +111,12 @@ export async function createCart(): Promise<{
   cart: CartWithProducts;
   token: string;
 }> {
-  const url = `${BASE_URL}/cart/create`;
+  const { baseUrl, bypassToken } = getSwagApiEnv();
+  const url = `${baseUrl}/cart/create`;
   const res = await fetch(url, {
     method: "POST",
     headers: {
-      "x-vercel-protection-bypass": BYPASS_TOKEN,
+      "x-vercel-protection-bypass": bypassToken,
     },
   });
 
