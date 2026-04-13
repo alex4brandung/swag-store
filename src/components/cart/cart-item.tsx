@@ -16,9 +16,10 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
 
   function handleQuantityChange(newQty: number) {
     startTransition(async () => {
-      const result = newQty < 1
-        ? await removeCartItemAction(item.productId)
-        : await updateCartItemAction(item.productId, newQty);
+      const result =
+        newQty < 1
+          ? await removeCartItemAction(item.productId)
+          : await updateCartItemAction(item.productId, newQty);
       if (result.success) {
         onCartUpdated(result.cart);
       }
@@ -65,7 +66,9 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
           >
             −
           </button>
-          <span className="text-sm w-6 text-center">{item.quantity}</span>
+          <span className="text-sm w-6 text-center text-muted-foreground">
+            {item.quantity}
+          </span>
           <button
             onClick={() => handleQuantityChange(item.quantity + 1)}
             disabled={isPending}

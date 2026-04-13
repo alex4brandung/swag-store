@@ -10,7 +10,7 @@ async function CartWrapper() {
 
 function CartFallback() {
   return (
-    <div className="relative flex items-center text-muted-foreground">
+    <div className="relative flex items-center text-white/80">
       <svg
         width="20"
         height="20"
