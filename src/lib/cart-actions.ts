@@ -11,7 +11,20 @@ import {
 } from "@/lib/api";
 import type { CartWithProducts } from "@/lib/types";
 
+type CartActionResult =
+  | { success: true; cart: CartWithProducts }
+  | { success: false; error: string };
+
 const CART_TOKEN_COOKIE = "cart-token";
+const MAX_QUANTITY = 99;
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function isValidQuantity(value: unknown): value is number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= MAX_QUANTITY;
+}
 
 async function getCartToken(): Promise<string | null> {
   const cookieStore = await cookies();
@@ -47,7 +60,14 @@ export async function getCartAction(): Promise<CartWithProducts | null> {
 export async function addToCartAction(
   productId: string,
   quantity: number
-): Promise<{ success: true; cart: CartWithProducts } | { success: false; error: string }> {
+): Promise<CartActionResult> {
+  if (!isNonEmptyString(productId)) {
+    return { success: false, error: "Invalid product ID" };
+  }
+  if (!isValidQuantity(quantity)) {
+    return { success: false, error: "Quantity must be an integer between 1 and 99" };
+  }
+
   try {
     const token = await ensureCart();
     const cart = await addItemToCart(token, productId, quantity);
@@ -64,7 +84,14 @@ export async function addToCartAction(
 export async function updateCartItemAction(
   itemId: string,
   quantity: number
-): Promise<{ success: true; cart: CartWithProducts } | { success: false; error: string }> {
+): Promise<CartActionResult> {
+  if (!isNonEmptyString(itemId)) {
+    return { success: false, error: "Invalid item ID" };
+  }
+  if (!isValidQuantity(quantity)) {
+    return { success: false, error: "Quantity must be an integer between 1 and 99" };
+  }
+
   try {
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
@@ -81,7 +108,11 @@ export async function updateCartItemAction(
 
 export async function removeCartItemAction(
   itemId: string
-): Promise<{ success: true; cart: CartWithProducts } | { success: false; error: string }> {
+): Promise<CartActionResult> {
+  if (!isNonEmptyString(itemId)) {
+    return { success: false, error: "Invalid item ID" };
+  }
+
   try {
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
