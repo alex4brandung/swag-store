@@ -8,13 +8,6 @@ interface AddToCartSectionProps {
   slug: string;
 }
 
-const FALLBACK_STOCK: StockInfo = {
-  productId: "",
-  stock: 0,
-  inStock: false,
-  lowStock: false,
-};
-
 export async function AddToCartSection({
   productId,
   slug,
@@ -23,7 +16,7 @@ export async function AddToCartSection({
   try {
     stock = await getProductStock(slug);
   } catch {
-    stock = { ...FALLBACK_STOCK, productId };
+    stock = { productId, stock: 0, inStock: false, lowStock: false };
   }
 
   return (
