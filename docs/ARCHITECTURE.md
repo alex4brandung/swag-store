@@ -41,29 +41,33 @@ No additional runtime dependencies were added. The project uses only what ships 
 src/
   app/                        App Router routes
     layout.tsx                Root layout (Header, Footer, metadata)
+    globals.css               Tailwind v4 imports + design tokens
     page.tsx                  Homepage
-    loading.tsx               Root-level loading fallback
+    error.tsx                 Root error boundary (client)
     not-found.tsx             Custom 404 page
     products/[slug]/
       page.tsx                Product detail page (dynamic route)
-      loading.tsx             PDP loading skeleton
+      error.tsx               PDP error boundary (client)
     search/
       page.tsx                Search/browse page
-      loading.tsx             Search loading skeleton
   components/                 Shared UI components
     header.tsx                Sticky header with nav + cart icon
-    footer.tsx                Footer with copyright year
+    footer.tsx                Footer with copyright year (cached)
     hero.tsx                  Homepage hero section
-    promo-banner.tsx          Dynamic promotional banner
+    hero-scroll-cue.tsx       Mobile scroll-down indicator (client)
+    promo-banner.tsx          Promotional banner (cached)
     product-card.tsx          Reusable product card for grids
     product-grid.tsx          Featured products grid (cached)
+    product-grid-skeleton.tsx Skeleton placeholder for product grids
     stock-indicator.tsx       Stock availability badge
     quantity-selector.tsx     Numeric quantity input (client)
     add-to-cart-button.tsx    Add to cart CTA (client)
     add-to-cart-section.tsx   Combines stock fetch + cart button (server)
     search-input.tsx          Search text input with debounce (client)
     category-filter.tsx       Category dropdown filter (client)
-    search-results.tsx        Server-rendered search results
+    search-results.tsx        Server-rendered search results (cached)
+    error-display.tsx         Shared error page layout (client)
+    icons.tsx                 SVG icon components
     cart/
       cart-sheet.tsx          Slide-out cart panel (client)
       cart-item.tsx           Individual cart line item (client)
@@ -72,6 +76,7 @@ src/
     types.ts                  TypeScript interfaces for all API schemas
     cart-actions.ts           Server Actions for cart CRUD
     utils.ts                  Utility functions (price formatting)
+    site-url.ts               Canonical site URL helper for metadata
 ```
 
 The separation follows a clear principle: **`lib/` holds data concerns, `components/` holds UI, `app/` holds routing and page composition.**
@@ -91,20 +96,20 @@ The `"use cache"` directive is applied at the **function or component level**, n
 | Cached (`"use cache"` + `cacheTag`) | Why |
 |---|---|
 | `FeaturedProducts` component (`product-grid.tsx`) | Product catalog is relatively stable. Tagged `"featured-products"` for targeted revalidation. |
-| `fetchProduct()` in PDP (`products/[slug]/page.tsx`) | Individual product info rarely changes. Tagged `"product-{slug}"` per product. |
+| `fetchProduct()` in PDP (`products/[slug]/page.tsx`) | Individual product info rarely changes. Uses `cacheLife("hours")`, tagged `"product-{slug}"` per product. |
 | `fetchCategories()` in search page | Category list is near-static. Tagged `"categories"`. |
-| `Footer` component | Uses `new Date()` which cacheComponents treats as uncached I/O. Wrapping in `"use cache"` makes it part of the static shell. |
+| `fetchPromotion()` in `promo-banner.tsx` | Promotions change infrequently. Uses `cacheLife("hours")`, tagged `"promotion"`. The API *may* return a different promotion on each uncached request; caching means users see a consistent banner until the cache refreshes. |
+| `fetchSearchResults()` in `search-results.tsx` | With `"use cache"`, the function arguments (`query`, `category`) automatically form part of the cache key, so each unique search is cached independently. Tagged `"search-results"` for bulk invalidation. |
+| `fetchCachedCart()` in `header.tsx` | Cached per cart token (the token argument becomes part of the cache key). Tagged `"cart-{token}"` so cart mutations can invalidate it via `updateTag`. |
+| `Footer` component | Uses `new Date()` which cacheComponents treats as uncached I/O. Wrapping in `"use cache"` with `cacheLife("days")` makes it part of the static shell. |
 
 | Not cached (dynamic) | Why |
 |---|---|
-| `PromoBanner` — fetches `/promotions` | The API returns a **random** promotion on each request. Caching would defeat the purpose. |
-| `AddToCartSection` — fetches `/products/{id}/stock` | Stock levels are explicitly **real-time** and change on every request. |
-| `SearchResults` — fetches `/products?search=...` | Results depend on user-provided `searchParams`, which vary per request. |
-| `CartWrapper` in header — fetches cart | Cart is user-specific and mutable. Must always be fresh. |
+| `AddToCartSection` — fetches `/products/{id}/stock` | Stock levels are explicitly **real-time** per the API spec ("changes on every request"). Must remain dynamic. |
 
 ### Why not cache at the API client level?
 
-Caching is applied at the **component level** rather than inside `lib/api.ts` because the same API endpoint (e.g., `listProducts`) is used in both cached contexts (featured grid) and uncached contexts (search results). Putting `"use cache"` on the fetch function itself would cache search queries, which must remain dynamic.
+Caching is applied at the **component level** rather than inside `lib/api.ts` because the same API endpoint (e.g., `listProducts`) may need different cache lifetimes or tags depending on context. Component-level `"use cache"` also lets Next.js cache the rendered output (not just the raw data), which is more efficient for PPR.
 
 ---
 
@@ -161,7 +166,7 @@ export default function ProductPage({ params }: Props) {
 | `AddToCartSection` | Inside `ProductContent` | Small skeleton block |
 | `CartWrapper` | `header.tsx` | Static bag icon |
 | `SearchContent` | `search/page.tsx` | Full page skeleton |
-| `SearchResults` | Inside `SearchContent` | 6-card skeleton grid |
+| `SearchResults` | Inside `SearchContent` | Skeleton grid |
 | `SearchInput` / `CategoryFilter` | Inside `SearchContent` | (none — fast) |
 
 ---
@@ -174,26 +179,28 @@ The guiding principle: **Server Components by default. `"use client"` only when 
 
 All page layouts, data fetching, and content rendering happen in Server Components:
 
-- `Header`, `Footer`, `Hero`, `PromoBanner`, `ProductContent`, `SearchContent`, `SearchResults`, `FeaturedProducts`, `AddToCartSection`, `StockIndicator`, `ProductCard`
+- `Header`, `Footer`, `Hero`, `PromoBanner`, `ProductContent`, `SearchContent`, `SearchResults`, `FeaturedProducts`, `AddToCartSection`, `StockIndicator`, `ProductCard`, `ProductGridSkeleton`
 
 These components have zero client-side JavaScript overhead.
 
 ### Client Components (`"use client"`)
 
-Only five components need client-side interactivity:
+Eight components use `"use client"`:
 
 | Component | Why it needs the client |
 |---|---|
 | `SearchInput` | Text input state, `onChange`/`onKeyDown` handlers, debounce timer, `useRouter` for URL navigation |
-| `CategoryFilter` | `onChange` handler for `<select>`, `useRouter` for URL navigation |
+| `CategoryFilter` | Custom listbox state, keyboard navigation, `useRouter` for URL navigation |
 | `QuantitySelector` | Click handlers for increment/decrement buttons |
 | `AddToCartButton` | `useState` for quantity and feedback, `useTransition` for pending state during Server Action calls |
 | `CartSheet` | `useState` for open/close, `useRef` for dialog element, `useEffect` for modal lifecycle, `useTransition` for cart refresh |
 | `CartItem` | `useTransition` for quantity/remove mutations |
+| `HeroScrollCue` | Scroll event listener, `useState` for visibility toggle |
+| `ErrorDisplay` | `useEffect` for error logging, `reset` click handler |
 
-### Passing Server Actions to Client Components
+### Importing Server Actions in Client Components
 
-The `AddToCartButton` receives `addToCartAction` as a prop rather than importing it directly. This is because `addToCartAction` is a Server Action (defined in a `"use server"` file), and passing it as a prop through the server component tree ensures the serialization boundary is handled cleanly. The Server Action reference is serialized by React and callable from the client.
+Client components import Server Actions directly from `lib/cart-actions.ts` (a `"use server"` module). In Next.js 16, this is the standard pattern — the bundler replaces the import with a serializable reference that React can call over the network. No prop-passing through the server tree is needed.
 
 ---
 
@@ -210,12 +217,12 @@ All cart mutations use Server Actions (`"use server"` in `lib/cart-actions.ts`):
 
 - Server Actions are **co-located** with the data logic, reducing indirection.
 - They integrate natively with React's `useTransition` for optimistic UI updates.
-- They can call `cookies()` and `revalidatePath()` directly — no need for a separate API route.
+- They can call `cookies()` and `updateTag()` directly — no need for a separate API route.
 - The assignment specifically requires demonstrating Server Actions as a Next.js 16 pattern.
 
-### `revalidatePath` after mutations
+### `updateTag` after mutations
 
-Every cart mutation calls `revalidatePath("/", "layout")` after success. This tells Next.js to re-render the layout (which includes the header with the cart badge) on the next request, ensuring the cart count stays in sync.
+Every cart mutation calls `updateTag(`cart-${token}`)` after success. This invalidates the cached cart data in `fetchCachedCart()` (in the header), which is tagged with the same `cart-{token}` key. On the next request, the header re-fetches the cart and the badge count updates.
 
 ---
 
@@ -227,12 +234,12 @@ The external API uses anonymous cart tokens. Our implementation:
 
 1. **No cart on first visit** — no cookie is set until the user adds their first item.
 2. **Lazy creation** — `ensureCart()` checks for an existing token in cookies. If none exists, it calls `POST /cart/create` and stores the returned `x-cart-token` in an `httpOnly` cookie.
-3. **Cookie settings** — `httpOnly: true` (not accessible via JS), `sameSite: "lax"`, `maxAge: 86400` (24h, matching the API's token expiry).
-4. **Session persistence** — Refreshing the page or navigating away preserves the cart because the cookie persists within the browser session.
+3. **Cookie settings** — `httpOnly: true` (not accessible via JS), `sameSite: "lax"`, `maxAge: 2592000` (30 days). The API tokens themselves expire after 24 hours of inactivity; if a token expires, `getCartAction` catches the error and returns `null`, effectively starting a fresh session.
+4. **Session persistence** — Refreshing the page or navigating away preserves the cart because the cookie persists across browser sessions.
 
 ### Cart display architecture
 
-The header's cart icon is a **Server Component** (`CartWrapper`) that reads the cookie and fetches the cart server-side. It passes the data as `initialCart` to the **Client Component** (`CartSheet`). When the sheet opens, it re-fetches the cart to ensure freshness. After each item mutation (`CartItem`), a callback triggers `refreshCart()` to update the displayed state.
+The header's cart icon is a **Server Component** (`CartWrapper`) that reads the cookie, fetches the cart via `fetchCachedCart` (which uses `"use cache"` keyed by token), and passes the data as `initialCart` to the **Client Component** (`CartSheet`). The sheet uses local state seeded from `initialCart` and updates in-place via `onCartUpdated` callbacks after each mutation — no client-side re-fetch is needed because every Server Action already returns the updated cart.
 
 ### Why `async cookies()`?
 
@@ -360,14 +367,18 @@ All layouts use Tailwind's responsive prefixes (`sm:`, `lg:`) for a mobile-first
         "use cache"     No cache (dynamic)    "use server"
               │              │                      │
      ┌────────┴───────┐   ┌─┴──────────────┐   ┌──┴────────────┐
-     │ FeaturedProducts│   │ PromoBanner    │   │ addToCartAction│
-     │ fetchProduct()  │   │ AddToCartSection│  │ updateCartItem │
-     │ fetchCategories │   │ SearchResults  │   │ removeCartItem │
-     │ Footer          │   │ CartWrapper    │   │ getCartAction  │
-     └────────┬───────┘   └─┬──────────────┘   └──┬────────────┘
-              │              │                      │
-              ▼              ▼                      ▼
-        Static shell    Streams via           Called from
-        (prerendered)   Suspense at           client components
-                        request time          via useTransition
+     │ FeaturedProducts│   │ AddToCartSection│   │ addToCartAction│
+     │ fetchProduct()  │   │  (stock fetch) │   │ updateCartItem │
+     │ fetchCategories │   └────────────────┘   │ removeCartItem │
+     │ fetchPromotion  │                        │ getCartAction  │
+     │ fetchSearch     │                        └──┬────────────┘
+     │ fetchCachedCart │                           │
+     │ Footer          │                           ▼
+     └────────┬───────┘                      Called from
+              │                              client components
+              ▼                              via useTransition
+        Streams via Suspense;
+        cache keys include function
+        args (slug, query, token)
+        for per-variant caching
 ```
