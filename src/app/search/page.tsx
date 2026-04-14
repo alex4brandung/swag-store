@@ -4,7 +4,7 @@ import { cacheTag } from "next/cache";
 import { listCategories } from "@/lib/api";
 import { SearchInput } from "@/components/search-input";
 import { CategoryFilter } from "@/components/category-filter";
-import { SearchResults } from "@/components/search-results";
+import { SearchResults, SearchResultsCount } from "@/components/search-results";
 import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 
 interface Props {
@@ -54,7 +54,21 @@ async function SearchContent({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground mb-6">
-          {isSearching ? "Search Results" : "All Products"}
+          {isSearching ? (
+            <>
+              Search Results{" "}
+              <span className="text-sm font-normal text-muted-foreground">
+                {[q && `for "${q}"`, category && `in ${category}`]
+                  .filter(Boolean)
+                  .join(" ")}
+              </span>
+              <Suspense>
+                <SearchResultsCount query={q} category={category} />
+              </Suspense>
+            </>
+          ) : (
+            "All Products"
+          )}
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-3">

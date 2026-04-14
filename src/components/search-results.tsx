@@ -18,6 +18,15 @@ async function fetchSearchResults(query?: string, category?: string) {
   });
 }
 
+export async function SearchResultsCount({ query, category }: SearchResultsProps) {
+  const products = await fetchSearchResults(query, category);
+  return (
+    <span className="text-sm font-normal text-muted-foreground">
+      {" "}— {products.length} result{products.length !== 1 ? "s" : ""}
+    </span>
+  );
+}
+
 export async function SearchResults({ query, category }: SearchResultsProps) {
   const isDefaultState = !query && !category;
 
@@ -44,19 +53,10 @@ export async function SearchResults({ query, category }: SearchResultsProps) {
   }
 
   return (
-    <div>
-      {!isDefaultState && (
-        <p className="text-sm text-muted-foreground mb-5">
-          {products.length} result{products.length !== 1 ? "s" : ""}
-          {query ? ` for "${query}"` : ""}
-          {category ? ` in ${category}` : ""}
-        </p>
-      )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
     </div>
   );
 }
