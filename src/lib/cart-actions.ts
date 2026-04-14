@@ -51,7 +51,7 @@ export async function addToCartAction(
   try {
     const token = await ensureCart();
     const cart = await addItemToCart(token, productId, quantity);
-    updateTag("cart");
+    updateTag(`cart-${token}`);
     return { success: true, cart };
   } catch (err) {
     return {
@@ -69,7 +69,7 @@ export async function updateCartItemAction(
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
     const cart = await updateItem(token, itemId, quantity);
-    updateTag("cart");
+    updateTag(`cart-${token}`);
     return { success: true, cart };
   } catch (err) {
     return {
@@ -86,7 +86,7 @@ export async function removeCartItemAction(
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
     const cart = await removeItem(token, itemId);
-    updateTag("cart");
+    updateTag(`cart-${token}`);
     return { success: true, cart };
   } catch (err) {
     return {

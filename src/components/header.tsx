@@ -11,7 +11,7 @@ async function fetchCachedCart(
   token: string | null
 ): Promise<CartWithProducts | null> {
   "use cache";
-  cacheTag("cart");
+  cacheTag(token ? `cart-${token}` : "cart");
   if (!token) return null;
   try {
     return await getCart(token);
