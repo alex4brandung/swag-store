@@ -1,3 +1,4 @@
+import { cacheTag } from "next/cache";
 import { listProducts } from "@/lib/api";
 import { SearchEmptyIcon } from "@/components/icons";
 import { ProductCard } from "./product-card";
@@ -7,15 +8,20 @@ interface SearchResultsProps {
   category?: string;
 }
 
-export async function SearchResults({ query, category }: SearchResultsProps) {
-  const isDefaultState = !query && !category;
-  const limit = isDefaultState ? 12 : 5;
-
-  const products = await listProducts({
+async function fetchSearchResults(query?: string, category?: string) {
+  "use cache";
+  cacheTag("search-results");
+  return listProducts({
     search: query || undefined,
     category: category || undefined,
-    limit,
+    limit: 12,
   });
+}
+
+export async function SearchResults({ query, category }: SearchResultsProps) {
+  const isDefaultState = !query && !category;
+
+  const products = await fetchSearchResults(query, category);
 
   if (products.length === 0) {
     return (

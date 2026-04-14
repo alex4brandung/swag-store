@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { getProduct } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartSection } from "@/components/add-to-cart-section";
@@ -16,6 +16,7 @@ interface Props {
 
 async function fetchProduct(slug: string) {
   "use cache";
+  cacheLife("hours");
   cacheTag(`product-${slug}`);
   return getProduct(slug);
 }
