@@ -14,7 +14,7 @@ async function fetchSearchResults(query?: string, category?: string) {
   return listProducts({
     search: query || undefined,
     category: category || undefined,
-    limit: 12,
+    limit: 5,
   });
 }
 
@@ -28,8 +28,6 @@ export async function SearchResultsCount({ query, category }: SearchResultsProps
 }
 
 export async function SearchResults({ query, category }: SearchResultsProps) {
-  const isDefaultState = !query && !category;
-
   const products = await fetchSearchResults(query, category);
 
   if (products.length === 0) {
