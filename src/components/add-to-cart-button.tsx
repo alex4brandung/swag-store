@@ -48,9 +48,7 @@ export function AddToCartButton({
     <div className="flex flex-col gap-4">
       {inStock && (
         <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
-            Quantity
-          </span>
+          <span className="text-sm text-muted-foreground">Quantity</span>
           <QuantitySelector
             value={quantity}
             max={maxStock}
@@ -72,8 +70,6 @@ export function AddToCartButton({
             <SpinnerIcon />
             Adding...
           </>
-        ) : status === "success" ? (
-          "Added!"
         ) : (
           "Add to Cart"
         )}
