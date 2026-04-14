@@ -37,19 +37,13 @@ export function CartSheet() {
       <dialog
         ref={dialogRef}
         onClose={() => setIsOpen(false)}
-        onClick={() => setIsOpen(false)}
-        className="fixed inset-0 z-50 m-0 hidden h-dvh max-h-dvh w-full max-w-none border-0 bg-transparent p-0 open:flex open:flex-col backdrop:bg-transparent"
+        onClick={(e) => {
+          if (e.target === dialogRef.current) setIsOpen(false);
+        }}
+        className="fixed inset-0 z-50 m-0 hidden h-dvh max-h-dvh w-full max-w-none border-0 bg-transparent p-0 open:block [&::backdrop]:bg-transparent"
         aria-label="Shopping cart"
       >
-        <div className="flex min-h-0 flex-1 flex-row">
-          <div
-            className="min-h-0 min-w-0 flex-1 bg-black/45 backdrop-blur-md"
-            aria-hidden
-          />
-          <aside
-            className="flex h-full min-h-0 w-full max-w-sm flex-col border-l border-border bg-muted text-foreground"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <aside className="absolute top-0 right-0 flex h-full min-h-0 w-full min-w-0 max-w-sm flex-col border-l border-border bg-muted text-foreground">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <h2 className="text-base font-semibold text-foreground">
                 Cart
@@ -70,7 +64,7 @@ export function CartSheet() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-5">
+            <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5">
               {!cart || cart.items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
                   <ShoppingBagIcon />
@@ -104,8 +98,7 @@ export function CartSheet() {
                 </button>
               </div>
             )}
-          </aside>
-        </div>
+        </aside>
       </dialog>
     </>
   );
