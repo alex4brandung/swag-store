@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { addToCartAction } from "@/lib/cart-actions";
 import { SpinnerIcon } from "@/components/icons";
+import { useCart } from "./cart/cart-context";
 import { QuantitySelector } from "./quantity-selector";
 
 interface AddToCartButtonProps {
@@ -16,32 +17,20 @@ export function AddToCartButton({
   maxStock,
   inStock,
 }: AddToCartButtonProps) {
+  const { openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
-  const [feedback, setFeedback] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
-  const isLoading = status === "loading";
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleAddToCart() {
-    setStatus("loading");
-    setFeedback(null);
+    setIsLoading(true);
+    setError(null);
     const result = await addToCartAction(productId, quantity);
+    setIsLoading(false);
     if (result.success) {
-      setStatus("success");
-      setFeedback({ type: "success", message: "Added to cart!" });
-      setTimeout(() => {
-        setFeedback(null);
-        setStatus("idle");
-      }, 3000);
+      openCart(result.cart);
     } else {
-      setStatus("idle");
-      setFeedback({
-        type: "error",
-        message: result.error,
-      });
+      setError(result.error);
     }
   }
 
@@ -76,14 +65,9 @@ export function AddToCartButton({
         )}
       </button>
 
-      {feedback && (
-        <p
-          className={`text-sm font-medium ${
-            feedback.type === "success" ? "text-green-400" : "text-red-400"
-          }`}
-          role="status"
-        >
-          {feedback.message}
+      {error && (
+        <p className="text-sm font-medium text-red-400" role="status">
+          {error}
         </p>
       )}
     </div>

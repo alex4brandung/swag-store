@@ -5,14 +5,15 @@ import { useTransition } from "react";
 import { removeCartItemAction, updateCartItemAction } from "@/lib/cart-actions";
 import { TrashIcon } from "@/components/icons";
 import { formatPrice } from "@/lib/utils";
-import type { CartItemWithProduct, CartWithProducts } from "@/lib/types";
+import type { CartItemWithProduct } from "@/lib/types";
+import { useCart } from "./cart-context";
 
 interface CartItemProps {
   item: CartItemWithProduct;
-  onCartUpdated: (cart: CartWithProducts) => void;
 }
 
-export function CartItem({ item, onCartUpdated }: CartItemProps) {
+export function CartItem({ item }: CartItemProps) {
+  const { setCart } = useCart();
   const [isPending, startTransition] = useTransition();
 
   function handleQuantityChange(newQty: number) {
@@ -22,7 +23,7 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
           ? await removeCartItemAction(item.productId)
           : await updateCartItemAction(item.productId, newQty);
       if (result.success) {
-        onCartUpdated(result.cart);
+        setCart(result.cart);
       }
     });
   }
@@ -31,7 +32,7 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
     startTransition(async () => {
       const result = await removeCartItemAction(item.productId);
       if (result.success) {
-        onCartUpdated(result.cart);
+        setCart(result.cart);
       }
     });
   }

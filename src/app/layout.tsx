@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { CartProvider } from "@/components/cart/cart-context";
 import { getSiteUrl } from "@/lib/site-url";
 
 const geistSans = Geist({
@@ -53,9 +54,11 @@ export default function RootLayout({
         <meta name="generator" content="vswag-cert-v3" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <CartProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

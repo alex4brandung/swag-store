@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { cacheTag } from "next/cache";
 import { getCart } from "@/lib/api";
 import { CartSheet } from "./cart/cart-sheet";
+import { CartInitializer } from "./cart/cart-context";
 import { ShoppingBagIcon, VercelTriangle } from "./icons";
 import type { CartWithProducts } from "@/lib/types";
 
@@ -24,7 +25,12 @@ async function CartWrapper() {
   const cookieStore = await cookies();
   const token = cookieStore.get("cart-token")?.value ?? null;
   const cart = await fetchCachedCart(token);
-  return <CartSheet initialCart={cart} />;
+  return (
+    <>
+      <CartInitializer initialCart={cart} />
+      <CartSheet />
+    </>
+  );
 }
 
 function CartFallback() {

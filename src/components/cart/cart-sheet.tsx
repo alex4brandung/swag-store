@@ -1,27 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { formatPrice } from "@/lib/utils";
-import type { CartWithProducts } from "@/lib/types";
 import { CloseIcon, ShoppingBagIcon } from "../icons";
 import { CartItem } from "./cart-item";
+import { useCart } from "./cart-context";
 
-interface CartSheetProps {
-  initialCart: CartWithProducts | null;
-}
-
-export function CartSheet({ initialCart }: CartSheetProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [cart, setCart] = useState<CartWithProducts | null>(initialCart);
+export function CartSheet() {
+  const { cart, isOpen, setIsOpen } = useCart();
   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  const handleCartUpdated = useCallback((next: CartWithProducts) => {
-    setCart(next);
-  }, []);
-
-  useEffect(() => {
-    setCart(initialCart);
-  }, [initialCart]);
 
   useEffect(() => {
     if (isOpen) {
@@ -94,7 +81,6 @@ export function CartSheet({ initialCart }: CartSheetProps) {
                   <CartItem
                     key={item.productId}
                     item={item}
-                    onCartUpdated={handleCartUpdated}
                   />
                 ))
               )}
