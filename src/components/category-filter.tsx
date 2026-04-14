@@ -5,7 +5,6 @@ import {
   useCallback,
   useEffect,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -87,7 +86,7 @@ export function CategoryFilter({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!open) return;
     const el = optionRefs.current[selectedIndex] ?? optionRefs.current[0];
     el?.focus();
