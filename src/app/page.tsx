@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Hero } from "@/components/hero";
 import { PromoBanner, PromoBannerSkeleton } from "@/components/promo-banner";
 import { FeaturedProducts } from "@/components/product-grid";
+import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 
 export const metadata: Metadata = {
   title: "Vercel Swag Store — Official Merch",
@@ -15,26 +16,6 @@ export const metadata: Metadata = {
       "Shop official Vercel merchandise — premium developer apparel, accessories, and gear.",
   },
 };
-
-function ProductGridSkeleton() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-xl border border-border bg-muted overflow-hidden animate-pulse"
-        >
-          <div className="aspect-square bg-border" />
-          <div className="p-4 space-y-2">
-            <div className="h-3 bg-border rounded w-16" />
-            <div className="h-4 bg-border rounded w-3/4" />
-            <div className="h-4 bg-border rounded w-16 mt-2" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function HomePage() {
   return (

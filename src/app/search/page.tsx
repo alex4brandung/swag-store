@@ -5,6 +5,7 @@ import { listCategories } from "@/lib/api";
 import { SearchInput } from "@/components/search-input";
 import { CategoryFilter } from "@/components/category-filter";
 import { SearchResults } from "@/components/search-results";
+import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 
 interface Props {
   searchParams: Promise<{ q?: string; category?: string }>;
@@ -27,26 +28,6 @@ async function fetchCategories() {
   return listCategories();
 }
 
-function ResultsSkeleton() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 animate-pulse">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div
-          key={i}
-          className="rounded-xl border border-border bg-muted overflow-hidden"
-        >
-          <div className="aspect-square bg-border" />
-          <div className="p-4 space-y-2">
-            <div className="h-3 bg-border rounded w-16" />
-            <div className="h-4 bg-border rounded w-3/4" />
-            <div className="h-4 bg-border rounded w-16 mt-2" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function SearchPageSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-pulse">
@@ -55,7 +36,7 @@ function SearchPageSkeleton() {
         <div className="flex-1 h-11 bg-muted border border-border rounded-lg" />
         <div className="w-36 h-11 bg-muted border border-border rounded-lg" />
       </div>
-      <ResultsSkeleton />
+      <ProductGridSkeleton />
     </div>
   );
 }
@@ -93,7 +74,7 @@ async function SearchContent({
 
       <Suspense
         key={`${q ?? ""}-${category ?? ""}`}
-        fallback={<ResultsSkeleton />}
+        fallback={<ProductGridSkeleton />}
       >
         <SearchResults query={q} category={category} />
       </Suspense>

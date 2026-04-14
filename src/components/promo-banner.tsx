@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { getPromotion } from "@/lib/api";
 
 /** Matches loaded banner: ~74px inner row, ~100px total with py-3 + border-y. */
@@ -40,6 +40,7 @@ export function PromoBannerSkeleton() {
 
 async function fetchPromotion() {
   "use cache";
+  cacheLife("hours");
   cacheTag("promotion");
   return getPromotion();
 }
