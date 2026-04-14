@@ -1,9 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { formatPrice } from "@/lib/utils";
 import type { CartWithProducts } from "@/lib/types";
+import { CloseIcon } from "../icons";
 import { CartItem } from "./cart-item";
 
 interface CartSheetProps {
@@ -11,18 +11,13 @@ interface CartSheetProps {
 }
 
 export function CartSheet({ initialCart }: CartSheetProps) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [cart, setCart] = useState<CartWithProducts | null>(initialCart);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
-  const handleCartUpdated = useCallback(
-    (next: CartWithProducts) => {
-      setCart(next);
-      router.refresh();
-    },
-    [router]
-  );
+  const handleCartUpdated = useCallback((next: CartWithProducts) => {
+    setCart(next);
+  }, []);
 
   useEffect(() => {
     setCart(initialCart);
@@ -150,21 +145,3 @@ function ShoppingBagIcon() {
   );
 }
 
-function CloseIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
-}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { getCartAction } from "@/lib/cart-actions";
 import { CartSheet } from "./cart/cart-sheet";
+import { VercelTriangle } from "./icons";
 
 async function CartWrapper() {
   const cart = await getCartAction();
@@ -66,16 +67,3 @@ export function Header() {
   );
 }
 
-function VercelTriangle() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 76 65"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
-    </svg>
-  );
-}

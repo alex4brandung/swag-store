@@ -1,26 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { addToCartAction } from "@/lib/cart-actions";
 import { QuantitySelector } from "./quantity-selector";
 
 interface AddToCartButtonProps {
   productId: string;
   maxStock: number;
   inStock: boolean;
-  addToCartAction: (
-    productId: string,
-    quantity: number
-  ) => Promise<{ success: boolean; error?: string }>;
 }
 
 export function AddToCartButton({
   productId,
   maxStock,
   inStock,
-  addToCartAction,
 }: AddToCartButtonProps) {
-  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<{
@@ -34,12 +28,11 @@ export function AddToCartButton({
       const result = await addToCartAction(productId, quantity);
       if (result.success) {
         setFeedback({ type: "success", message: "Added to cart!" });
-        router.refresh();
         setTimeout(() => setFeedback(null), 3000);
       } else {
         setFeedback({
           type: "error",
-          message: result.error ?? "Something went wrong",
+          message: result.error,
         });
       }
     });

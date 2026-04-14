@@ -26,9 +26,10 @@ async function ensureCart(): Promise<string> {
   const { token } = await createCart();
   cookieStore.set(CART_TOKEN_COOKIE, token, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24,
+    maxAge: 60 * 60 * 24 * 30,
   });
   return token;
 }
@@ -46,12 +47,12 @@ export async function getCartAction(): Promise<CartWithProducts | null> {
 export async function addToCartAction(
   productId: string,
   quantity: number
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: true; cart: CartWithProducts } | { success: false; error: string }> {
   try {
     const token = await ensureCart();
-    await addItemToCart(token, productId, quantity);
+    const cart = await addItemToCart(token, productId, quantity);
     revalidatePath("/", "layout");
-    return { success: true };
+    return { success: true, cart };
   } catch (err) {
     return {
       success: false,

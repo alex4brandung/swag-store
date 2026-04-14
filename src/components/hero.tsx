@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroScrollCue } from "@/components/hero-scroll-cue";
+import { VercelTriangle } from "@/components/icons";
 
 const HERO_IMAGE_WIDTH = 1376;
 const HERO_IMAGE_HEIGHT = 768;
@@ -43,7 +44,7 @@ export function Hero() {
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-[2.75rem] xl:text-6xl font-bold tracking-tight text-white leading-[1.08]">
+              <h1 className="text-4xl sm:text-5xl lg:text-[2.75rem] xl:text-6xl font-bold tracking-tight text-foreground leading-[1.08]">
                 Gear Up,
                 <br />
                 <span className="text-muted-foreground">Ship Faster.</span>
@@ -84,20 +85,6 @@ export function Hero() {
 
       <HeroScrollCue />
     </section>
-  );
-}
-
-function VercelTriangle({ size = 14 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 76 65"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
-    </svg>
   );
 }
 

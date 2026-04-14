@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Hero } from "@/components/hero";
 import { PromoBanner, PromoBannerSkeleton } from "@/components/promo-banner";
 import { FeaturedProducts } from "@/components/product-grid";
@@ -52,12 +53,12 @@ export default function HomePage() {
           <h2 className="text-xl font-semibold text-foreground">
             Featured Products
           </h2>
-          <a
+          <Link
             href="/search"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             View all &rarr;
-          </a>
+          </Link>
         </div>
 
         <Suspense fallback={<ProductGridSkeleton />}>

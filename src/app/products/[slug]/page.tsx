@@ -7,7 +7,6 @@ import { cacheTag } from "next/cache";
 import { getProduct } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartSection } from "@/components/add-to-cart-section";
-import { addToCartAction } from "@/lib/cart-actions";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -110,7 +109,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
             <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
               {product.category}
             </span>
-            <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-white leading-tight">
+            <h1 className="mt-2 text-2xl sm:text-3xl font-bold text-foreground leading-tight">
               {product.name}
             </h1>
             <p className="mt-3 text-2xl font-semibold text-foreground">
@@ -134,7 +133,6 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
             <AddToCartSection
               productId={product.id}
               slug={product.slug}
-              addToCartAction={addToCartAction}
             />
           </Suspense>
 

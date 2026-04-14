@@ -6,10 +6,6 @@ import type { StockInfo } from "@/lib/types";
 interface AddToCartSectionProps {
   productId: string;
   slug: string;
-  addToCartAction: (
-    productId: string,
-    quantity: number
-  ) => Promise<{ success: boolean; error?: string }>;
 }
 
 const FALLBACK_STOCK: StockInfo = {
@@ -22,7 +18,6 @@ const FALLBACK_STOCK: StockInfo = {
 export async function AddToCartSection({
   productId,
   slug,
-  addToCartAction,
 }: AddToCartSectionProps) {
   let stock: StockInfo;
   try {
@@ -38,7 +33,6 @@ export async function AddToCartSection({
         productId={productId}
         maxStock={stock.stock}
         inStock={stock.inStock}
-        addToCartAction={addToCartAction}
       />
     </div>
   );

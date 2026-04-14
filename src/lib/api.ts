@@ -28,10 +28,10 @@ function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
   return { baseUrl, bypassToken };
 }
 
-async function apiFetch<T>(
+async function apiRawFetch<T>(
   path: string,
   options: RequestInit = {}
-): Promise<T> {
+): Promise<{ data: T; response: Response }> {
   const { baseUrl, bypassToken } = getSwagApiEnv();
   const url = `${baseUrl}${path}`;
   const res = await fetch(url, {
@@ -54,7 +54,15 @@ async function apiFetch<T>(
   if (!body.success) {
     throw new Error(body.error.message);
   }
-  return body.data;
+  return { data: body.data, response: res };
+}
+
+async function apiFetch<T>(
+  path: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const { data } = await apiRawFetch<T>(path, options);
+  return data;
 }
 
 // ── Products ────────────────────────────────────────────────────────
@@ -71,12 +79,11 @@ export async function listProducts(
   params: ListProductsParams = {}
 ): Promise<Product[]> {
   const qs = new URLSearchParams();
-  if (params.page) qs.set("page", String(params.page));
-  if (params.limit) qs.set("limit", String(params.limit));
+  if (params.page != null) qs.set("page", String(params.page));
+  if (params.limit != null) qs.set("limit", String(params.limit));
   if (params.category) qs.set("category", params.category);
   if (params.search) qs.set("search", params.search);
-  if (params.featured !== undefined)
-    qs.set("featured", String(params.featured));
+  if (params.featured != null) qs.set("featured", String(params.featured));
   const query = qs.toString();
   return apiFetch<Product[]>(`/products${query ? `?${query}` : ""}`);
 }
@@ -111,30 +118,17 @@ export async function createCart(): Promise<{
   cart: CartWithProducts;
   token: string;
 }> {
-  const { baseUrl, bypassToken } = getSwagApiEnv();
-  const url = `${baseUrl}/cart/create`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "x-vercel-protection-bypass": bypassToken,
-    },
-  });
+  const { data, response } = await apiRawFetch<CartWithProducts>(
+    "/cart/create",
+    { method: "POST" }
+  );
 
-  if (!res.ok) {
-    throw new Error(`Failed to create cart: HTTP ${res.status}`);
-  }
-
-  const token = res.headers.get("x-cart-token");
+  const token = response.headers.get("x-cart-token");
   if (!token) {
     throw new Error("No cart token in response");
   }
 
-  const body = (await res.json()) as ApiResponse<CartWithProducts>;
-  if (!body.success) {
-    throw new Error(body.error.message);
-  }
-
-  return { cart: body.data, token };
+  return { cart: data, token };
 }
 
 export async function getCart(cartToken: string): Promise<CartWithProducts> {
