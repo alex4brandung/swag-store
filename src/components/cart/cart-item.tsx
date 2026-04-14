@@ -60,6 +60,7 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
         </p>
         <div className="flex items-center gap-2 mt-2">
           <button
+            type="button"
             onClick={() => handleQuantityChange(item.quantity - 1)}
             disabled={isPending}
             aria-label="Decrease quantity"
@@ -71,6 +72,7 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
             {item.quantity}
           </span>
           <button
+            type="button"
             onClick={() => handleQuantityChange(item.quantity + 1)}
             disabled={isPending}
             aria-label="Increase quantity"
@@ -85,6 +87,7 @@ export function CartItem({ item, onCartUpdated }: CartItemProps) {
           {formatPrice(item.lineTotal, item.product.currency)}
         </span>
         <button
+          type="button"
           onClick={handleRemove}
           disabled={isPending}
           aria-label="Remove item"
