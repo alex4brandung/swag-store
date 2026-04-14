@@ -10,7 +10,8 @@ export function HeroScrollCue() {
 
   useEffect(() => {
     function onScroll() {
-      setAtTop(window.scrollY <= SCROLL_TOP_THRESHOLD_PX);
+      const isAtTop = window.scrollY <= SCROLL_TOP_THRESHOLD_PX;
+      setAtTop((prev) => (prev === isAtTop ? prev : isAtTop));
     }
 
     onScroll();
