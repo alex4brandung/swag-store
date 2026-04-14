@@ -9,11 +9,7 @@ const HERO_IMAGE_HEIGHT = 768;
 export function Hero() {
   return (
     <section
-      className={[
-        "relative overflow-hidden",
-        "max-lg:flex max-lg:flex-col max-lg:min-h-dvh",
-        "py-10 sm:py-16 lg:py-28",
-      ].join(" ")}
+      className="relative overflow-hidden max-lg:flex max-lg:flex-col max-lg:min-h-dvh py-10 sm:py-16 lg:py-28"
     >
       <div
         aria-hidden="true"

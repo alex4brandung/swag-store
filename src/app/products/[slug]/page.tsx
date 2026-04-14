@@ -64,7 +64,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
           <li aria-hidden="true">/</li>
           <li>
             <Link
-              href={`/search?category=${product.category}`}
+              href={`/search?category=${encodeURIComponent(product.category)}`}
               className="hover:text-foreground transition-colors capitalize"
             >
               {product.category}
