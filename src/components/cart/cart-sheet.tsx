@@ -7,7 +7,7 @@ import { CartItem } from "./cart-item";
 import { useCart } from "./cart-context";
 
 export function CartSheet() {
-  const { cart, isOpen, setIsOpen } = useCart();
+  const { optimisticCart: cart, isOpen, setIsOpen } = useCart();
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

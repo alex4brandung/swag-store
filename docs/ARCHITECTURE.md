@@ -8,11 +8,11 @@ This document explains the architectural decisions, patterns, and rationale behi
 
 1. [Tech Stack](#tech-stack)
 2. [Project Structure](#project-structure)
-3. [Cache Components & `"use cache"`](#cache-components--use-cache)
+3. [Cache Components & `"use cache"](#cache-components--use-cache)`
 4. [Partial Prerendering (PPR)](#partial-prerendering-ppr)
 5. [Suspense Boundaries](#suspense-boundaries)
 6. [Server vs Client Component Split](#server-vs-client-component-split)
-7. [Async `params` and `searchParams`](#async-params-and-searchparams)
+7. [Async `params` and `searchParams](#async-params-and-searchparams)`
 8. [Server Actions](#server-actions)
 9. [Cart Architecture](#cart-architecture)
 10. [Search Architecture](#search-architecture)
@@ -24,12 +24,14 @@ This document explains the architectural decisions, patterns, and rationale behi
 
 ## Tech Stack
 
-| Technology | Version | Purpose |
-|---|---|---|
-| Next.js | 16.2.1 | App Router, Cache Components, Partial Prerendering |
-| React | 19.2.4 | Server Components, `useTransition`, Suspense |
-| Tailwind CSS | 4.x | Utility-first styling via PostCSS (no config file) |
-| TypeScript | 5.x | Strict typing throughout |
+
+| Technology   | Version | Purpose                                            |
+| ------------ | ------- | -------------------------------------------------- |
+| Next.js      | 16.2.1  | App Router, Cache Components, Partial Prerendering |
+| React        | 19.2.4  | Server Components, `useTransition`, Suspense       |
+| Tailwind CSS | 4.x     | Utility-first styling via PostCSS (no config file) |
+| TypeScript   | 5.x     | Strict typing throughout                           |
+
 
 No additional runtime dependencies were added. The project uses only what ships with `create-next-app`.
 
@@ -79,7 +81,7 @@ src/
     site-url.ts               Canonical site URL helper for metadata
 ```
 
-The separation follows a clear principle: **`lib/` holds data concerns, `components/` holds UI, `app/` holds routing and page composition.**
+The separation follows a clear principle: `**lib/` holds data concerns, `components/` holds UI, `app/` holds routing and page composition.**
 
 ---
 
@@ -93,19 +95,23 @@ Next.js 16 introduced Cache Components via the `cacheComponents: true` config fl
 
 The `"use cache"` directive is applied at the **function or component level**, not at the page level. This gives fine-grained control over exactly which data is cached and which remains dynamic.
 
-| Cached (`"use cache"` + `cacheTag`) | Why |
-|---|---|
-| `FeaturedProducts` component (`product-grid.tsx`) | Product catalog is relatively stable. Tagged `"featured-products"` for targeted revalidation. |
-| `fetchProduct()` in PDP (`products/[slug]/page.tsx`) | Individual product info rarely changes. Uses `cacheLife("hours")`, tagged `"product-{slug}"` per product. |
-| `fetchCategories()` in search page | Category list is near-static. Tagged `"categories"`. |
-| `fetchPromotion()` in `promo-banner.tsx` | Promotions change infrequently. Uses `cacheLife("hours")`, tagged `"promotion"`. The API *may* return a different promotion on each uncached request; caching means users see a consistent banner until the cache refreshes. |
-| `fetchSearchResults()` in `search-results.tsx` | With `"use cache"`, the function arguments (`query`, `category`) automatically form part of the cache key, so each unique search is cached independently. Tagged `"search-results"` for bulk invalidation. |
-| `fetchCachedCart()` in `header.tsx` | Cached per cart token (the token argument becomes part of the cache key). Tagged `"cart-{token}"` so cart mutations can invalidate it via `updateTag`. |
-| `Footer` component | Uses `new Date()` which cacheComponents treats as uncached I/O. Wrapping in `"use cache"` with `cacheLife("days")` makes it part of the static shell. |
 
-| Not cached (dynamic) | Why |
-|---|---|
+| Cached (`"use cache"` + `cacheTag`)                  | Why                                                                                                                                                                                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FeaturedProducts` component (`product-grid.tsx`)    | Product catalog is relatively stable. Tagged `"featured-products"` for targeted revalidation.                                                                                                                                |
+| `fetchProduct()` in PDP (`products/[slug]/page.tsx`) | Individual product info rarely changes. Uses `cacheLife("hours")`, tagged `"product-{slug}"` per product.                                                                                                                    |
+| `fetchCategories()` in search page                   | Category list is near-static. Tagged `"categories"`.                                                                                                                                                                         |
+| `fetchPromotion()` in `promo-banner.tsx`             | Promotions change infrequently. Uses `cacheLife("hours")`, tagged `"promotion"`. The API *may* return a different promotion on each uncached request; caching means users see a consistent banner until the cache refreshes. |
+| `fetchSearchResults()` in `search-results.tsx`       | With `"use cache"`, the function arguments (`query`, `category`) automatically form part of the cache key, so each unique search is cached independently. Tagged `"search-results"` for bulk invalidation.                   |
+| `fetchCachedCart()` in `header.tsx`                  | Cached per cart token (the token argument becomes part of the cache key). Tagged `"cart-{token}"` so cart mutations can invalidate it via `updateTag`.                                                                       |
+| `Footer` component                                   | Uses `new Date()` which cacheComponents treats as uncached I/O. Wrapping in `"use cache"` with `cacheLife("days")` makes it part of the static shell.                                                                        |
+
+
+
+| Not cached (dynamic)                                | Why                                                                                                           |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `AddToCartSection` — fetches `/products/{id}/stock` | Stock levels are explicitly **real-time** per the API spec ("changes on every request"). Must remain dynamic. |
+
 
 ### Why not cache at the API client level?
 
@@ -158,16 +164,18 @@ export default function ProductPage({ params }: Props) {
 
 ### Suspense placement summary
 
-| Component | Suspense location | Fallback |
-|---|---|---|
-| `PromoBanner` | `page.tsx` (homepage) | Thin animated bar |
-| `FeaturedProducts` | `page.tsx` (homepage) | 6-card skeleton grid |
-| `ProductContent` | `products/[slug]/page.tsx` | Full page skeleton |
-| `AddToCartSection` | Inside `ProductContent` | Small skeleton block |
-| `CartWrapper` | `header.tsx` | Static bag icon |
-| `SearchContent` | `search/page.tsx` | Full page skeleton |
-| `SearchResults` | Inside `SearchContent` | Skeleton grid |
-| `SearchInput` / `CategoryFilter` | Inside `SearchContent` | (none — fast) |
+
+| Component                        | Suspense location          | Fallback             |
+| -------------------------------- | -------------------------- | -------------------- |
+| `PromoBanner`                    | `page.tsx` (homepage)      | Thin animated bar    |
+| `FeaturedProducts`               | `page.tsx` (homepage)      | 6-card skeleton grid |
+| `ProductContent`                 | `products/[slug]/page.tsx` | Full page skeleton   |
+| `AddToCartSection`               | Inside `ProductContent`    | Small skeleton block |
+| `CartWrapper`                    | `header.tsx`               | Static bag icon      |
+| `SearchContent`                  | `search/page.tsx`          | Full page skeleton   |
+| `SearchResults`                  | Inside `SearchContent`     | Skeleton grid        |
+| `SearchInput` / `CategoryFilter` | Inside `SearchContent`     | (none — fast)        |
+
 
 ---
 
@@ -187,16 +195,18 @@ These components have zero client-side JavaScript overhead.
 
 Eight components use `"use client"`:
 
-| Component | Why it needs the client |
-|---|---|
-| `SearchInput` | Text input state, `onChange`/`onKeyDown` handlers, debounce timer, `useRouter` for URL navigation |
-| `CategoryFilter` | Custom listbox state, keyboard navigation, `useRouter` for URL navigation |
-| `QuantitySelector` | Click handlers for increment/decrement buttons |
-| `AddToCartButton` | `useState` for quantity and feedback, `useTransition` for pending state during Server Action calls |
-| `CartSheet` | `useState` for open/close, `useRef` for dialog element, `useEffect` for modal lifecycle, `useTransition` for cart refresh |
-| `CartItem` | `useTransition` for quantity/remove mutations |
-| `HeroScrollCue` | Scroll event listener, `useState` for visibility toggle |
-| `ErrorDisplay` | `useEffect` for error logging, `reset` click handler |
+
+| Component          | Why it needs the client                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `SearchInput`      | Text input state, `onChange`/`onKeyDown` handlers, debounce timer, `useRouter` for URL navigation                         |
+| `CategoryFilter`   | Custom listbox state, keyboard navigation, `useRouter` for URL navigation                                                 |
+| `QuantitySelector` | Click handlers for increment/decrement buttons                                                                            |
+| `AddToCartButton`  | `useState` for quantity and feedback, `useTransition` for pending state during Server Action calls                        |
+| `CartSheet`        | `useState` for open/close, `useRef` for dialog element, `useEffect` for modal lifecycle, `useTransition` for cart refresh |
+| `CartItem`         | `useTransition` for quantity/remove mutations                                                                             |
+| `HeroScrollCue`    | Scroll event listener, `useState` for visibility toggle                                                                   |
+| `ErrorDisplay`     | `useEffect` for error logging, `reset` click handler                                                                      |
+
 
 ### Importing Server Actions in Client Components
 
@@ -332,13 +342,15 @@ Tailwind v4 uses a CSS-first configuration model. There is no `tailwind.config.t
 
 All colors are defined as CSS custom properties in `:root` and referenced via `var(--...)` throughout:
 
-| Token | Value | Usage |
-|---|---|---|
-| `--background` | `#171719` | Page background |
-| `--foreground` | `#ededed` | Primary text |
-| `--muted` | `#2a2a2d` | Card backgrounds, secondary surfaces |
-| `--muted-foreground` | `#888892` | Secondary text, placeholders |
-| `--border` | `#2e2e32` | Borders, dividers, skeleton backgrounds |
+
+| Token                | Value     | Usage                                   |
+| -------------------- | --------- | --------------------------------------- |
+| `--background`       | `#171719` | Page background                         |
+| `--foreground`       | `#ededed` | Primary text                            |
+| `--muted`            | `#2a2a2d` | Card backgrounds, secondary surfaces    |
+| `--muted-foreground` | `#888892` | Secondary text, placeholders            |
+| `--border`           | `#2e2e32` | Borders, dividers, skeleton backgrounds |
+
 
 This gives a dark, Vercel-inspired aesthetic while keeping the color system maintainable.
 
@@ -382,3 +394,4 @@ All layouts use Tailwind's responsive prefixes (`sm:`, `lg:`) for a mobile-first
         args (slug, query, token)
         for per-variant caching
 ```
+

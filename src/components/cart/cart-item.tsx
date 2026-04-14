@@ -13,34 +13,37 @@ interface CartItemProps {
 }
 
 export function CartItem({ item }: CartItemProps) {
-  const { setCart } = useCart();
+  const { setCart, applyOptimistic } = useCart();
   const [isPending, startTransition] = useTransition();
 
   function handleQuantityChange(newQty: number) {
     startTransition(async () => {
-      const result =
-        newQty < 1
-          ? await removeCartItemAction(item.productId)
-          : await updateCartItemAction(item.productId, newQty);
-      if (result.success) {
-        setCart(result.cart);
+      if (newQty < 1) {
+        applyOptimistic({ type: "remove_item", productId: item.productId });
+        const result = await removeCartItemAction(item.productId);
+        if (result.success) setCart(result.cart);
+      } else {
+        applyOptimistic({
+          type: "update_quantity",
+          productId: item.productId,
+          quantity: newQty,
+        });
+        const result = await updateCartItemAction(item.productId, newQty);
+        if (result.success) setCart(result.cart);
       }
     });
   }
 
   function handleRemove() {
     startTransition(async () => {
+      applyOptimistic({ type: "remove_item", productId: item.productId });
       const result = await removeCartItemAction(item.productId);
-      if (result.success) {
-        setCart(result.cart);
-      }
+      if (result.success) setCart(result.cart);
     });
   }
 
   return (
-    <div
-      className={`flex gap-3 py-4 border-b border-border ${isPending ? "opacity-50" : ""}`}
-    >
+    <div className="flex gap-3 py-4 border-b border-border">
       <div className="relative h-16 w-16 shrink-0 rounded-md overflow-hidden bg-muted">
         {item.product.images[0] && (
           <Image
