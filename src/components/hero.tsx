@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroScrollCue } from "@/components/hero-scroll-cue";
-import { VercelTriangle } from "@/components/icons";
+import { ArrowRightIcon, VercelTriangle } from "@/components/icons";
 
 const HERO_IMAGE_WIDTH = 1376;
 const HERO_IMAGE_HEIGHT = 768;
@@ -85,24 +85,5 @@ export function Hero() {
 
       <HeroScrollCue />
     </section>
-  );
-}
-
-function ArrowRightIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
-    </svg>
   );
 }

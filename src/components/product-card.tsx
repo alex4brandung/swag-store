@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { VercelTriangle } from "@/components/icons";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/types";
 
@@ -24,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <PlaceholderIcon />
+            <VercelTriangle size={40} className="text-border" />
           </div>
         )}
       </div>
@@ -40,20 +41,5 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
       </div>
     </Link>
-  );
-}
-
-function PlaceholderIcon() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 76 65"
-      fill="currentColor"
-      aria-hidden="true"
-      className="text-border"
-    >
-      <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
-    </svg>
   );
 }

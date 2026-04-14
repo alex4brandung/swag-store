@@ -7,6 +7,7 @@ import { cacheTag } from "next/cache";
 import { getProduct } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { AddToCartSection } from "@/components/add-to-cart-section";
+import { VercelTriangle } from "@/components/icons";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -89,16 +90,7 @@ async function ProductContent({ params }: { params: Promise<{ slug: string }> })
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
-              <svg
-                width="80"
-                height="80"
-                viewBox="0 0 76 65"
-                fill="currentColor"
-                aria-hidden="true"
-                className="text-border"
-              >
-                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
-              </svg>
+              <VercelTriangle size={80} className="text-border" />
             </div>
           )}
         </div>

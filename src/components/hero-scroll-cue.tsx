@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronDownIcon } from "@/components/icons";
 
 const SCROLL_TOP_THRESHOLD_PX = 8;
 
@@ -36,26 +37,11 @@ export function HeroScrollCue() {
           : "invisible pointer-events-none translate-y-1 opacity-0",
       ].join(" ")}
     >
-      <ChevronDownIcon className="hero-scroll-chevron size-6 animate-bounce motion-reduce:animate-none" />
+      <ChevronDownIcon
+        size={20}
+        strokeWidth={2}
+        className="hero-scroll-chevron size-6 animate-bounce motion-reduce:animate-none"
+      />
     </a>
-  );
-}
-
-function ChevronDownIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={className}
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
   );
 }

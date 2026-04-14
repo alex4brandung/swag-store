@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { CheckIcon, ChevronDownIcon } from "@/components/icons";
 import type { Category } from "@/lib/types";
 
 interface CategoryFilterProps {
@@ -151,7 +152,7 @@ export function CategoryFilter({
           className={`shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
         >
-          <ChevronDownIcon />
+          <ChevronDownIcon size={12} strokeWidth={2.5} />
         </span>
       </button>
 
@@ -199,41 +200,5 @@ export function CategoryFilter({
         </div>
       ) : null}
     </div>
-  );
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
   );
 }
