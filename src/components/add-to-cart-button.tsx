@@ -64,7 +64,7 @@ export function AddToCartButton({
         onClick={handleAddToCart}
         disabled={!inStock || isLoading}
         aria-label={!inStock ? "Add to cart — out of stock" : undefined}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-white text-[#171719] font-semibold px-8 py-3 text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-accent text-accent-foreground font-semibold px-8 py-3 text-sm hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
         {isLoading ? (
           <>

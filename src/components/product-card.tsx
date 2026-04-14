@@ -14,7 +14,7 @@ export function ProductCard({ product }: ProductCardProps) {
       href={`/products/${product.slug}`}
       className="group flex flex-col rounded-xl overflow-hidden border border-border bg-muted hover:border-[#444448] transition-colors"
     >
-      <div className="relative aspect-square bg-[#222226] overflow-hidden">
+      <div className="relative aspect-square bg-muted overflow-hidden">
         {product.images[0] ? (
           <Image
             src={product.images[0]}

@@ -58,7 +58,7 @@ export function Hero() {
               <div className="mt-10 flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
                 <Link
                   href="/search"
-                  className="inline-flex items-center gap-2 rounded-lg bg-white text-[#171719] font-semibold px-6 py-3 text-sm hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-accent text-accent-foreground font-semibold px-6 py-3 text-sm hover:bg-accent/90 transition-colors"
                 >
                   Browse All Products
                   <ArrowRightIcon />

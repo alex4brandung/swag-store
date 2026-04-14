@@ -91,7 +91,7 @@ export function SearchInput({ defaultValue = "" }: SearchInputProps) {
       <button
         type="button"
         onClick={handleSearch}
-        className="rounded-lg bg-white text-[#171719] font-medium px-4 py-2.5 text-sm hover:bg-gray-100 transition-colors whitespace-nowrap cursor-pointer"
+        className="rounded-lg bg-accent text-accent-foreground font-medium px-4 py-2.5 text-sm hover:bg-accent/90 transition-colors whitespace-nowrap cursor-pointer"
       >
         Search
       </button>

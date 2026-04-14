@@ -41,7 +41,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[#171719] text-[10px] font-bold leading-none">
+          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-[10px] font-bold leading-none">
             {(cart?.totalItems ?? 0) > 99 ? "99+" : cart?.totalItems}
           </span>
         )}
@@ -60,7 +60,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
             aria-hidden
           />
           <aside
-            className="flex h-full min-h-0 w-full max-w-sm flex-col border-l border-border bg-[#1c1c1f] text-foreground"
+            className="flex h-full min-h-0 w-full max-w-sm flex-col border-l border-border bg-muted text-foreground"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
@@ -112,7 +112,7 @@ export function CartSheet({ initialCart }: CartSheetProps) {
                 </div>
                 <button
                   type="button"
-                  className="w-full rounded-lg bg-white text-[#171719] font-semibold py-3 text-sm hover:bg-gray-100 transition-colors cursor-pointer"
+                  className="w-full rounded-lg bg-accent text-accent-foreground font-semibold py-3 text-sm hover:bg-accent/90 transition-colors cursor-pointer"
                 >
                   Checkout
                 </button>
