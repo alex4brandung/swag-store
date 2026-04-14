@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { cookies } from "next/headers";
 import {
   addItemToCart,
@@ -51,7 +51,7 @@ export async function addToCartAction(
   try {
     const token = await ensureCart();
     const cart = await addItemToCart(token, productId, quantity);
-    revalidatePath("/", "layout");
+    updateTag("cart");
     return { success: true, cart };
   } catch (err) {
     return {
@@ -69,7 +69,7 @@ export async function updateCartItemAction(
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
     const cart = await updateItem(token, itemId, quantity);
-    revalidatePath("/", "layout");
+    updateTag("cart");
     return { success: true, cart };
   } catch (err) {
     return {
@@ -86,7 +86,7 @@ export async function removeCartItemAction(
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
     const cart = await removeItem(token, itemId);
-    revalidatePath("/", "layout");
+    updateTag("cart");
     return { success: true, cart };
   } catch (err) {
     return {

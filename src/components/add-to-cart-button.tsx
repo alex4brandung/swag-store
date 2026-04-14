@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { addToCartAction } from "@/lib/cart-actions";
 import { QuantitySelector } from "./quantity-selector";
 
@@ -16,26 +16,32 @@ export function AddToCartButton({
   inStock,
 }: AddToCartButtonProps) {
   const [quantity, setQuantity] = useState(1);
-  const [isPending, startTransition] = useTransition();
+  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [feedback, setFeedback] = useState<{
     type: "success" | "error";
     message: string;
   } | null>(null);
 
-  function handleAddToCart() {
-    startTransition(async () => {
-      setFeedback(null);
-      const result = await addToCartAction(productId, quantity);
-      if (result.success) {
-        setFeedback({ type: "success", message: "Added to cart!" });
-        setTimeout(() => setFeedback(null), 3000);
-      } else {
-        setFeedback({
-          type: "error",
-          message: result.error,
-        });
-      }
-    });
+  const isLoading = status === "loading";
+
+  async function handleAddToCart() {
+    setStatus("loading");
+    setFeedback(null);
+    const result = await addToCartAction(productId, quantity);
+    if (result.success) {
+      setStatus("success");
+      setFeedback({ type: "success", message: "Added to cart!" });
+      setTimeout(() => {
+        setFeedback(null);
+        setStatus("idle");
+      }, 3000);
+    } else {
+      setStatus("idle");
+      setFeedback({
+        type: "error",
+        message: result.error,
+      });
+    }
   }
 
   return (
@@ -49,7 +55,7 @@ export function AddToCartButton({
             value={quantity}
             max={maxStock}
             onChange={setQuantity}
-            disabled={isPending || !inStock}
+            disabled={isLoading || !inStock}
           />
         </div>
       )}
@@ -57,15 +63,17 @@ export function AddToCartButton({
       <button
         type="button"
         onClick={handleAddToCart}
-        disabled={!inStock || isPending}
+        disabled={!inStock || isLoading}
         aria-label={!inStock ? "Add to cart — out of stock" : undefined}
         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-white text-[#171719] font-semibold px-8 py-3 text-sm hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
       >
-        {isPending ? (
+        {isLoading ? (
           <>
             <SpinnerIcon />
             Adding...
           </>
+        ) : status === "success" ? (
+          "Added!"
         ) : (
           "Add to Cart"
         )}
