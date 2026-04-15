@@ -16,6 +16,8 @@ interface CartItemProps {
   item: CartItemWithProduct;
 }
 
+const MAX_CART_ITEM_QUANTITY = 99;
+
 export function CartItem({ item }: CartItemProps) {
   const { setCart, applyOptimistic } = useCart();
   const [isPending, startTransition] = useTransition();
@@ -110,7 +112,7 @@ export function CartItem({ item }: CartItemProps) {
           <button
             type="button"
             onClick={() => handleQuantityChange(item.quantity + 1)}
-            disabled={isPending}
+            disabled={isPending || item.quantity >= MAX_CART_ITEM_QUANTITY}
             aria-label="Increase quantity"
             className="flex h-6 w-6 items-center justify-center rounded border border-border text-foreground hover:bg-muted disabled:opacity-50 cursor-pointer"
           >
