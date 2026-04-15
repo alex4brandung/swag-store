@@ -7,7 +7,6 @@ import type {
   Promotion,
   StockInfo,
 } from "@/lib/types";
-import { logVercelCacheDebug } from "@/lib/vercel-debug";
 
 const READ_CACHE_REVALIDATE_SECONDS = 60 * 60;
 
@@ -42,12 +41,6 @@ async function apiRawFetch<T>(
 }> {
   const { baseUrl, bypassToken } = getSwagApiEnv();
   const url = `${baseUrl}${path}`;
-  if (path.startsWith("/products") || path === "/categories") {
-    logVercelCacheDebug("api.upstream.fetch", {
-      path,
-      method: options.method ?? "GET",
-    });
-  }
   const res = await fetch(url, {
     ...options,
     headers: {
