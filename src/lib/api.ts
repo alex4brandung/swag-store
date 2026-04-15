@@ -9,6 +9,8 @@ import type {
 } from "@/lib/types";
 import { logVercelCacheDebug } from "@/lib/vercel-debug";
 
+const READ_CACHE_REVALIDATE_SECONDS = 60 * 60;
+
 function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
   const baseUrl = process.env.SWAG_API_BASE_URL?.trim() ?? "";
   const bypassToken = process.env.SWAG_API_BYPASS_TOKEN?.trim() ?? "";
@@ -107,7 +109,11 @@ export async function listProductsWithMeta(
 ): Promise<ListProductsWithMetaResult> {
   const query = buildListProductsQuery(params);
   const { data, meta } = await apiRawFetch<Product[]>(
-    `/products${query ? `?${query}` : ""}`
+    `/products${query ? `?${query}` : ""}`,
+    {
+      cache: "force-cache",
+      next: { revalidate: READ_CACHE_REVALIDATE_SECONDS },
+    }
   );
   return { products: data, pagination: meta?.pagination };
 }
@@ -120,7 +126,10 @@ export async function listProducts(
 }
 
 export async function getProduct(idOrSlug: string): Promise<Product> {
-  return apiFetch<Product>(`/products/${encodeURIComponent(idOrSlug)}`);
+  return apiFetch<Product>(`/products/${encodeURIComponent(idOrSlug)}`, {
+    cache: "force-cache",
+    next: { revalidate: READ_CACHE_REVALIDATE_SECONDS },
+  });
 }
 
 // ── Stock ───────────────────────────────────────────────────────────
@@ -134,7 +143,10 @@ export async function getProductStock(idOrSlug: string): Promise<StockInfo> {
 // ── Categories ──────────────────────────────────────────────────────
 
 export async function listCategories(): Promise<Category[]> {
-  return apiFetch<Category[]>("/categories");
+  return apiFetch<Category[]>("/categories", {
+    cache: "force-cache",
+    next: { revalidate: READ_CACHE_REVALIDATE_SECONDS },
+  });
 }
 
 // ── Promotions ──────────────────────────────────────────────────────
