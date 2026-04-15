@@ -9,6 +9,23 @@ import type {
 } from "@/lib/types";
 
 const READ_CACHE_REVALIDATE_SECONDS = 60 * 60;
+const ENABLE_API_TIMINGS = process.env.SWAG_DEBUG_TIMINGS === "1";
+
+function getRequestMethod(options: RequestInit): string {
+  const method = options.method?.trim().toUpperCase();
+  return method && method.length > 0 ? method : "GET";
+}
+
+function logApiTiming(
+  method: string,
+  path: string,
+  durationMs: number,
+  status?: number
+): void {
+  if (!ENABLE_API_TIMINGS) return;
+  const statusPart = typeof status === "number" ? ` ${status}` : "";
+  console.info(`[swag-store][api] ${method} ${path}${statusPart} ${durationMs}ms`);
+}
 
 function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
   const baseUrl = process.env.SWAG_API_BASE_URL?.trim() ?? "";
@@ -41,14 +58,25 @@ async function apiRawFetch<T>(
 }> {
   const { baseUrl, bypassToken } = getSwagApiEnv();
   const url = `${baseUrl}${path}`;
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      "x-vercel-protection-bypass": bypassToken,
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
+  const method = getRequestMethod(options);
+  const startedAt = Date.now();
+  let res: Response;
+
+  try {
+    res = await fetch(url, {
+      ...options,
+      headers: {
+        "x-vercel-protection-bypass": bypassToken,
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
+    });
+  } catch (error) {
+    logApiTiming(method, path, Date.now() - startedAt);
+    throw error;
+  }
+
+  logApiTiming(method, path, Date.now() - startedAt, res.status);
 
   if (!res.ok) {
     const body = (await res.json().catch(() => null)) as ApiResponse<T> | null;
