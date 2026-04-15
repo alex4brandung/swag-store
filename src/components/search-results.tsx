@@ -1,9 +1,15 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { listProductsWithMeta } from "@/lib/api";
 import { SearchEmptyIcon } from "@/components/icons";
+import { normalizeSearchParam } from "@/components/search-page/normalize-search-param";
+import type { SearchParams } from "@/components/search-page/types";
 import { ProductCard } from "./product-card";
 
 interface SearchResultsProps {
+  searchParams: Promise<SearchParams>;
+}
+
+interface SearchResultsFilters {
   query?: string;
   category?: string;
 }
@@ -24,7 +30,10 @@ async function fetchSearchResults(query?: string, category?: string) {
   };
 }
 
-export async function SearchResultsCount({ query, category }: SearchResultsProps) {
+export async function SearchResultsCount({
+  query,
+  category,
+}: SearchResultsFilters) {
   const { total } = await fetchSearchResults(query, category);
   return (
     <span className="text-sm font-normal text-muted-foreground">
@@ -33,8 +42,11 @@ export async function SearchResultsCount({ query, category }: SearchResultsProps
   );
 }
 
-export async function SearchResults({ query, category }: SearchResultsProps) {
-  const { products } = await fetchSearchResults(query, category);
+export async function SearchResults({ searchParams }: SearchResultsProps) {
+  const { q, category } = await searchParams;
+  const query = normalizeSearchParam(q);
+  const normalizedCategory = normalizeSearchParam(category);
+  const { products } = await fetchSearchResults(query, normalizedCategory);
 
   if (products.length === 0) {
     return (

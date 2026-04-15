@@ -11,6 +11,16 @@ import type {
 const READ_CACHE_REVALIDATE_SECONDS = 60 * 60;
 const ENABLE_API_TIMINGS = process.env.SWAG_DEBUG_TIMINGS === "1";
 
+class ApiRequestError extends Error {
+  status?: number;
+
+  constructor(message: string, status?: number) {
+    super(message);
+    this.name = "ApiRequestError";
+    this.status = status;
+  }
+}
+
 function getRequestMethod(options: RequestInit): string {
   const method = options.method?.trim().toUpperCase();
   return method && method.length > 0 ? method : "GET";
@@ -82,7 +92,7 @@ async function apiRawFetch<T>(
     const body = (await res.json().catch(() => null)) as ApiResponse<T> | null;
     const message =
       body && !body.success ? body.error.message : `HTTP ${res.status}`;
-    throw new Error(message);
+    throw new ApiRequestError(message, res.status);
   }
 
   const body = (await res.json()) as ApiResponse<T>;
@@ -146,11 +156,18 @@ export async function listProducts(
   return products;
 }
 
-export async function getProduct(idOrSlug: string): Promise<Product> {
-  return apiFetch<Product>(`/products/${encodeURIComponent(idOrSlug)}`, {
-    cache: "force-cache",
-    next: { revalidate: READ_CACHE_REVALIDATE_SECONDS },
-  });
+export async function getProduct(idOrSlug: string): Promise<Product | null> {
+  "use cache";
+  let product: Product;
+  try {
+    product = await apiFetch<Product>(`/products/${encodeURIComponent(idOrSlug)}`);
+  } catch (error) {
+    if (error instanceof ApiRequestError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+  return product;
 }
 
 // ── Stock ───────────────────────────────────────────────────────────

@@ -4,7 +4,7 @@ import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 import { SearchControls } from "@/components/search-page/search-controls";
 import { SearchHeader } from "@/components/search-page/search-header";
 import { SearchHeaderSkeleton } from "@/components/search-page/search-header-skeleton";
-import { SearchResultsPanel } from "@/components/search-page/search-results-panel";
+import { SearchResults } from "@/components/search-results";
 import type { SearchParams } from "@/components/search-page/types";
 
 interface Props {
@@ -30,7 +30,7 @@ export default function SearchPage({ searchParams }: Props) {
       </Suspense>
       <SearchControls />
       <Suspense fallback={<ProductGridSkeleton />}>
-        <SearchResultsPanel searchParams={searchParams} />
+        <SearchResults searchParams={searchParams} />
       </Suspense>
     </div>
   );
