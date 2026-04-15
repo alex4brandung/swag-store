@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { listCategories } from "@/lib/api";
 import { logVercelCacheDebug } from "@/lib/vercel-debug";
 import { SearchInput } from "@/components/search-input";
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 
 async function fetchCategories() {
   "use cache";
+  cacheLife("hours");
   cacheTag("categories");
   return listCategories();
 }

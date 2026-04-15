@@ -1,4 +1,4 @@
-import { cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { listProductsWithMeta } from "@/lib/api";
 import { SearchEmptyIcon } from "@/components/icons";
 import { ProductCard } from "./product-card";
@@ -10,6 +10,7 @@ interface SearchResultsProps {
 
 async function fetchSearchResults(query?: string, category?: string) {
   "use cache";
+  cacheLife("hours");
   cacheTag("search-results");
   const hasActiveSearch = Boolean(query || category);
   const { products, pagination } = await listProductsWithMeta({
