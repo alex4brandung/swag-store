@@ -71,6 +71,7 @@ src/
     error-display.tsx         Shared error page layout (client)
     icons.tsx                 SVG icon components
     cart/
+      cart-context.tsx        Cart provider + optimistic cart state (client)
       cart-sheet.tsx          Slide-out cart panel (client)
       cart-item.tsx           Individual cart line item (client)
   lib/                        Data layer
@@ -193,7 +194,7 @@ These components have zero client-side JavaScript overhead.
 
 ### Client Components (`"use client"`)
 
-Eight components use `"use client"`:
+The codebase currently has **11 modules** with `"use client"` (9 shared components + 2 route-level error boundaries):
 
 
 | Component          | Why it needs the client                                                                                                   |
@@ -201,11 +202,13 @@ Eight components use `"use client"`:
 | `SearchInput`      | Text input state, `onChange`/`onKeyDown` handlers, debounce timer, `useRouter` for URL navigation                         |
 | `CategoryFilter`   | Custom listbox state, keyboard navigation, `useRouter` for URL navigation                                                 |
 | `QuantitySelector` | Click handlers for increment/decrement buttons                                                                            |
-| `AddToCartButton`  | `useState` for quantity and feedback, `useTransition` for pending state during Server Action calls                        |
-| `CartSheet`        | `useState` for open/close, `useRef` for dialog element, `useEffect` for modal lifecycle, `useTransition` for cart refresh |
+| `AddToCartButton`  | `useState` for quantity/loading/error state and click handling for `addToCartAction`                                      |
+| `CartSheet`        | `useState`/context-driven open state, `useRef` + `useEffect` for dialog lifecycle and focus management                    |
 | `CartItem`         | `useTransition` for quantity/remove mutations                                                                             |
+| `CartProvider` (`cart-context.tsx`) | Holds cart state in React context, applies `useOptimistic` updates, and controls cart sheet state                       |
 | `HeroScrollCue`    | Scroll event listener, `useState` for visibility toggle                                                                   |
 | `ErrorDisplay`     | `useEffect` for error logging, `reset` click handler                                                                      |
+| `app/error.tsx` and `app/products/[slug]/error.tsx` | Route-level error boundaries are client modules by Next.js convention                                                   |
 
 
 ### Importing Server Actions in Client Components
@@ -249,7 +252,12 @@ The external API uses anonymous cart tokens. Our implementation:
 
 ### Cart display architecture
 
-The header's cart icon is a **Server Component** (`CartWrapper`) that reads the cookie, fetches the cart via `fetchCachedCart` (which uses `"use cache"` keyed by token), and passes the data as `initialCart` to the **Client Component** (`CartSheet`). The sheet uses local state seeded from `initialCart` and updates in-place via `onCartUpdated` callbacks after each mutation — no client-side re-fetch is needed because every Server Action already returns the updated cart.
+The header's cart icon path is split into server + client responsibilities:
+
+- `CartWrapper` (server, inside `header.tsx`) reads the cookie and fetches the cart via `fetchCachedCart` (`"use cache"` keyed by token).
+- `CartInitializer` (client) hydrates that server-fetched cart into `CartProvider` context.
+- `CartSheet` and `CartItem` consume context (`useCart`) and perform optimistic updates via `useOptimistic` in `cart-context.tsx`.
+- Cart mutations still return the canonical updated cart from Server Actions, and UI state is reconciled with those responses (with a fallback `getCartAction()` refresh when needed).
 
 ### Why `async cookies()`?
 
