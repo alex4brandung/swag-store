@@ -2,7 +2,11 @@
 
 import Image from "next/image";
 import { useTransition } from "react";
-import { removeCartItemAction, updateCartItemAction } from "@/lib/cart-actions";
+import {
+  getCartAction,
+  removeCartItemAction,
+  updateCartItemAction,
+} from "@/lib/cart-actions";
 import { TrashIcon } from "@/components/icons";
 import { formatPrice } from "@/lib/utils";
 import type { CartItemWithProduct } from "@/lib/types";
@@ -18,27 +22,55 @@ export function CartItem({ item }: CartItemProps) {
 
   function handleQuantityChange(newQty: number) {
     startTransition(async () => {
-      if (newQty < 1) {
-        applyOptimistic({ type: "remove_item", productId: item.productId });
-        const result = await removeCartItemAction(item.productId);
-        if (result.success) setCart(result.cart);
-      } else {
-        applyOptimistic({
-          type: "update_quantity",
-          productId: item.productId,
-          quantity: newQty,
-        });
-        const result = await updateCartItemAction(item.productId, newQty);
-        if (result.success) setCart(result.cart);
+      let shouldRefreshFromServer = true;
+      try {
+        if (newQty < 1) {
+          applyOptimistic({ type: "remove_item", productId: item.productId });
+          const result = await removeCartItemAction(item.productId);
+          if (result.success) {
+            shouldRefreshFromServer = false;
+            setCart(result.cart);
+            return;
+          }
+        } else {
+          applyOptimistic({
+            type: "update_quantity",
+            productId: item.productId,
+            quantity: newQty,
+          });
+          const result = await updateCartItemAction(item.productId, newQty);
+          if (result.success) {
+            shouldRefreshFromServer = false;
+            setCart(result.cart);
+            return;
+          }
+        }
+      } finally {
+        if (shouldRefreshFromServer) {
+          const latestCart = await getCartAction();
+          setCart(latestCart);
+        }
       }
     });
   }
 
   function handleRemove() {
     startTransition(async () => {
-      applyOptimistic({ type: "remove_item", productId: item.productId });
-      const result = await removeCartItemAction(item.productId);
-      if (result.success) setCart(result.cart);
+      let shouldRefreshFromServer = true;
+      try {
+        applyOptimistic({ type: "remove_item", productId: item.productId });
+        const result = await removeCartItemAction(item.productId);
+        if (result.success) {
+          shouldRefreshFromServer = false;
+          setCart(result.cart);
+          return;
+        }
+      } finally {
+        if (shouldRefreshFromServer) {
+          const latestCart = await getCartAction();
+          setCart(latestCart);
+        }
+      }
     });
   }
 
