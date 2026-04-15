@@ -32,7 +32,9 @@ export function CartSheet() {
       'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
 
     const getFocusableElements = () =>
-      Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+      Array.from(
+        dialog.querySelectorAll<HTMLElement>(focusableSelector),
+      ).filter(
         (element) =>
           !element.hasAttribute("disabled") &&
           element.getAttribute("aria-hidden") !== "true" &&
@@ -93,6 +95,7 @@ export function CartSheet() {
       </button>
 
       <dialog
+        id="cart-sheet-dialog"
         ref={dialogRef}
         onClose={() => setIsOpen(false)}
         onClick={(e) => {
@@ -102,60 +105,54 @@ export function CartSheet() {
         aria-label="Shopping cart"
       >
         <aside className="absolute top-0 right-0 flex h-full min-h-0 w-full min-w-0 max-w-sm flex-col border-l border-border bg-muted text-foreground">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-              <h2 className="text-base font-semibold text-foreground">
-                Cart
-                {cart && cart.totalItems > 0 && (
-                  <span className="ml-2 text-sm text-muted-foreground font-normal">
-                    ({cart.totalItems}{" "}
-                    {cart.totalItems === 1 ? "item" : "items"})
-                  </span>
-                )}
-              </h2>
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+            <h2 className="text-base font-semibold text-foreground">
+              Cart
+              {cart && cart.totalItems > 0 && (
+                <span className="ml-2 text-sm text-muted-foreground font-normal">
+                  ({cart.totalItems} {cart.totalItems === 1 ? "item" : "items"})
+                </span>
+              )}
+            </h2>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              aria-label="Close cart"
+              className="text-muted-foreground hover:text-foreground cursor-pointer"
+            >
+              <CloseIcon />
+            </button>
+          </div>
+
+          <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5">
+            {!cart || cart.items.length === 0 ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
+                <ShoppingBagIcon />
+                <p className="text-sm">Your cart is empty</p>
+              </div>
+            ) : (
+              cart.items.map((item) => (
+                <CartItem key={item.productId} item={item} />
+              ))
+            )}
+          </div>
+
+          {cart && cart.items.length > 0 && (
+            <div className="px-5 py-5 border-t border-border">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm text-muted-foreground">Subtotal</span>
+                <span className="text-base font-semibold text-foreground">
+                  {formatPrice(cart.subtotal, cart.currency)}
+                </span>
+              </div>
               <button
                 type="button"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close cart"
-                className="text-muted-foreground hover:text-foreground cursor-pointer"
+                className="w-full rounded-lg bg-accent text-accent-foreground font-semibold py-3 text-sm hover:bg-accent/90 transition-colors cursor-pointer"
               >
-                <CloseIcon />
+                Checkout
               </button>
             </div>
-
-            <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5">
-              {!cart || cart.items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
-                  <ShoppingBagIcon />
-                  <p className="text-sm">Your cart is empty</p>
-                </div>
-              ) : (
-                cart.items.map((item) => (
-                  <CartItem
-                    key={item.productId}
-                    item={item}
-                  />
-                ))
-              )}
-            </div>
-
-            {cart && cart.items.length > 0 && (
-              <div className="px-5 py-5 border-t border-border">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-muted-foreground">
-                    Subtotal
-                  </span>
-                  <span className="text-base font-semibold text-foreground">
-                    {formatPrice(cart.subtotal, cart.currency)}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  className="w-full rounded-lg bg-accent text-accent-foreground font-semibold py-3 text-sm hover:bg-accent/90 transition-colors cursor-pointer"
-                >
-                  Checkout
-                </button>
-              </div>
-            )}
+          )}
         </aside>
       </dialog>
     </>
