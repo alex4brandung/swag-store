@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { cacheTag } from "next/cache";
 import { listCategories } from "@/lib/api";
+import { logVercelCacheDebug } from "@/lib/vercel-debug";
 import { SearchInput } from "@/components/search-input";
 import { CategoryFilter } from "@/components/category-filter";
 import { SearchResults, SearchResultsCount } from "@/components/search-results";
@@ -47,6 +48,10 @@ async function SearchContent({
   searchParams: Promise<{ q?: string; category?: string }>;
 }) {
   const { q, category } = await searchParams;
+  logVercelCacheDebug("search.SearchContent.params", {
+    query: q ?? null,
+    category: category ?? null,
+  });
   const categories = await fetchCategories();
   const isSearching = Boolean(q || category);
 
