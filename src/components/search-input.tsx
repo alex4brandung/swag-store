@@ -6,19 +6,22 @@ import { CloseIcon, SearchIcon } from "./icons";
 
 export function SearchInput() {
   const router = useRouter();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(() => {
+    if (typeof window === "undefined") return "";
+    const params = new URLSearchParams(window.location.search);
+    return params.get("q") ?? "";
+  });
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function syncFromLocation() {
+  function getQueryFromLocation() {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
-    setValue(params.get("q") ?? "");
+    return params.get("q") ?? "";
   }
 
   useEffect(() => {
-    syncFromLocation();
     function handlePopState() {
-      syncFromLocation();
+      setValue(getQueryFromLocation() ?? "");
     }
     window.addEventListener("popstate", handlePopState);
     return () => {

@@ -18,8 +18,14 @@ type CartActionResult =
 const CART_TOKEN_COOKIE = "cart-token";
 const MAX_QUANTITY = 99;
 
-function updateProductStockTag(productId: string): void {
+function updateProductStockTags(
+  productId: string,
+  productSlug?: string,
+): void {
   updateTag(`product-stock-${productId}`);
+  if (isNonEmptyString(productSlug)) {
+    updateTag(`product-stock-${productSlug}`);
+  }
 }
 
 function isNonEmptyString(value: unknown): value is string {
@@ -63,7 +69,8 @@ export async function getCartAction(): Promise<CartWithProducts | null> {
 
 export async function addToCartAction(
   productId: string,
-  quantity: number
+  quantity: number,
+  productSlug?: string,
 ): Promise<CartActionResult> {
   if (!isNonEmptyString(productId)) {
     return { success: false, error: "Invalid product ID" };
@@ -76,7 +83,7 @@ export async function addToCartAction(
     const token = await ensureCart();
     const cart = await addItemToCart(token, productId, quantity);
     updateTag(`cart-${token}`);
-    updateProductStockTag(productId);
+    updateProductStockTags(productId, productSlug);
     return { success: true, cart };
   } catch (err) {
     return {
@@ -88,7 +95,8 @@ export async function addToCartAction(
 
 export async function updateCartItemAction(
   productId: string,
-  quantity: number
+  quantity: number,
+  productSlug?: string,
 ): Promise<CartActionResult> {
   if (!isNonEmptyString(productId)) {
     return { success: false, error: "Invalid product ID" };
@@ -102,7 +110,7 @@ export async function updateCartItemAction(
     if (!token) return { success: false, error: "No cart found" };
     const cart = await updateItem(token, productId, quantity);
     updateTag(`cart-${token}`);
-    updateProductStockTag(productId);
+    updateProductStockTags(productId, productSlug);
     return { success: true, cart };
   } catch (err) {
     return {
@@ -113,7 +121,8 @@ export async function updateCartItemAction(
 }
 
 export async function removeCartItemAction(
-  productId: string
+  productId: string,
+  productSlug?: string,
 ): Promise<CartActionResult> {
   if (!isNonEmptyString(productId)) {
     return { success: false, error: "Invalid product ID" };
@@ -124,7 +133,7 @@ export async function removeCartItemAction(
     if (!token) return { success: false, error: "No cart found" };
     const cart = await removeItem(token, productId);
     updateTag(`cart-${token}`);
-    updateProductStockTag(productId);
+    updateProductStockTags(productId, productSlug);
     return { success: true, cart };
   } catch (err) {
     return {

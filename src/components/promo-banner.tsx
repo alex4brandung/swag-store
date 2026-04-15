@@ -1,5 +1,5 @@
-import { cacheLife, cacheTag } from "next/cache";
 import { getPromotion } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 
 /** Matches loaded banner: ~74px inner row, ~100px total with py-3 + border-y. */
 const promoBannerContentMinHeight =
@@ -38,20 +38,12 @@ export function PromoBannerSkeleton() {
   );
 }
 
-async function fetchPromotion() {
+export async function PromoBanner() {
   "use cache";
   cacheLife("hours");
-  cacheTag("promotion");
-  return getPromotion();
-}
+  cacheTag("promotions");
 
-export async function PromoBanner() {
-  let promo;
-  try {
-    promo = await fetchPromotion();
-  } catch {
-    return null;
-  }
+  const promo = await getPromotion();
 
   if (!promo || !promo.active) return null;
 

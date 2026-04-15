@@ -36,6 +36,7 @@ export async function AddToCartSection({
       <StockIndicator stock={stock} />
       <AddToCartButton
         productId={productId}
+        productSlug={slug}
         maxStock={stock.stock}
         inStock={stock.inStock}
       />

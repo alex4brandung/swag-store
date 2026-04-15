@@ -1,5 +1,5 @@
-import { cacheLife, cacheTag } from "next/cache";
 import { listProductsWithMeta } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 import { SearchEmptyIcon } from "@/components/icons";
 import { normalizeSearchParam } from "@/components/search-page/normalize-search-param";
 import type { SearchParams } from "@/components/search-page/types";
@@ -16,8 +16,11 @@ interface SearchResultsFilters {
 
 async function fetchSearchResults(query?: string, category?: string) {
   "use cache";
-  cacheLife("hours");
-  cacheTag("search-results");
+  cacheLife("minutes");
+  cacheTag("products");
+  if (category) {
+    cacheTag(`products:category:${encodeURIComponent(category.toLowerCase())}`);
+  }
   const hasActiveSearch = Boolean(query || category);
   const { products, pagination } = await listProductsWithMeta({
     search: query || undefined,

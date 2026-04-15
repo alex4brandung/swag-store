@@ -1,17 +1,13 @@
+import { getCategories } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
-import { listCategories } from "@/lib/api";
 import { CategoryFilter } from "@/components/category-filter";
 import { SearchInput } from "@/components/search-input";
 
-async function fetchCategories() {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("categories");
-  return listCategories();
-}
-
 export async function SearchControls() {
-  const categories = await fetchCategories();
+  "use cache";
+  cacheLife("days");
+  cacheTag("categories");
+  const categories = await getCategories();
 
   return (
     <div className="mb-8">

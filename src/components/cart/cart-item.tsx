@@ -28,7 +28,10 @@ export function CartItem({ item }: CartItemProps) {
       try {
         if (newQty < 1) {
           applyOptimistic({ type: "remove_item", productId: item.productId });
-          const result = await removeCartItemAction(item.productId);
+          const result = await removeCartItemAction(
+            item.productId,
+            item.product.slug,
+          );
           if (result.success) {
             shouldRefreshFromServer = false;
             setCart(result.cart);
@@ -40,7 +43,11 @@ export function CartItem({ item }: CartItemProps) {
             productId: item.productId,
             quantity: newQty,
           });
-          const result = await updateCartItemAction(item.productId, newQty);
+          const result = await updateCartItemAction(
+            item.productId,
+            newQty,
+            item.product.slug,
+          );
           if (result.success) {
             shouldRefreshFromServer = false;
             setCart(result.cart);
@@ -61,7 +68,10 @@ export function CartItem({ item }: CartItemProps) {
       let shouldRefreshFromServer = true;
       try {
         applyOptimistic({ type: "remove_item", productId: item.productId });
-        const result = await removeCartItemAction(item.productId);
+        const result = await removeCartItemAction(
+          item.productId,
+          item.product.slug,
+        );
         if (result.success) {
           shouldRefreshFromServer = false;
           setCart(result.cart);

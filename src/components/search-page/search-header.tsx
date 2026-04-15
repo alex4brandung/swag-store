@@ -19,7 +19,13 @@ export async function SearchHeader({ searchParams }: SearchSectionProps) {
               .filter(Boolean)
               .join(" ")}
           </span>
-          <Suspense>
+          <Suspense
+            fallback={
+              <span className="text-sm font-normal text-muted-foreground">
+                {" "}— ...
+              </span>
+            }
+          >
             <SearchResultsCount query={query} category={normalizedCategory} />
           </Suspense>
         </>

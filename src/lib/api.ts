@@ -7,8 +7,8 @@ import type {
   Promotion,
   StockInfo,
 } from "@/lib/types";
+import { cacheLife, cacheTag } from "next/cache";
 
-const READ_CACHE_REVALIDATE_SECONDS = 60 * 60;
 const ENABLE_API_TIMINGS = process.env.SWAG_DEBUG_TIMINGS === "1";
 
 class ApiRequestError extends Error {
@@ -30,11 +30,13 @@ function logApiTiming(
   method: string,
   path: string,
   durationMs: number,
-  status?: number
+  status?: number,
 ): void {
   if (!ENABLE_API_TIMINGS) return;
   const statusPart = typeof status === "number" ? ` ${status}` : "";
-  console.info(`[swag-store][api] ${method} ${path}${statusPart} ${durationMs}ms`);
+  console.info(
+    `[swag-store][api] ${method} ${path}${statusPart} ${durationMs}ms`,
+  );
 }
 
 function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
@@ -60,7 +62,7 @@ function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
 
 async function apiRawFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<{
   data: T;
   response: Response;
@@ -104,7 +106,7 @@ async function apiRawFetch<T>(
 
 async function apiFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   const { data } = await apiRawFetch<T>(path, options);
   return data;
@@ -130,27 +132,36 @@ function buildListProductsQuery(params: ListProductsParams): string {
   return qs.toString();
 }
 
+function toTagSegment(value: string): string {
+  return encodeURIComponent(value.trim().toLowerCase());
+}
+
 export interface ListProductsWithMetaResult {
   products: Product[];
   pagination?: PaginationMeta;
 }
 
 export async function listProductsWithMeta(
-  params: ListProductsParams = {}
+  params: ListProductsParams = {},
 ): Promise<ListProductsWithMetaResult> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("products");
+  if (params.category) {
+    cacheTag(`products:category:${toTagSegment(params.category)}`);
+  }
+  if (params.featured != null) {
+    cacheTag(`products:featured:${params.featured ? "true" : "false"}`);
+  }
   const query = buildListProductsQuery(params);
   const { data, meta } = await apiRawFetch<Product[]>(
     `/products${query ? `?${query}` : ""}`,
-    {
-      cache: "force-cache",
-      next: { revalidate: READ_CACHE_REVALIDATE_SECONDS },
-    }
   );
   return { products: data, pagination: meta?.pagination };
 }
 
 export async function listProducts(
-  params: ListProductsParams = {}
+  params: ListProductsParams = {},
 ): Promise<Product[]> {
   const { products } = await listProductsWithMeta(params);
   return products;
@@ -158,9 +169,14 @@ export async function listProducts(
 
 export async function getProduct(idOrSlug: string): Promise<Product | null> {
   "use cache";
+  cacheLife("hours");
+  cacheTag("products");
+  cacheTag(`product:${toTagSegment(idOrSlug)}`);
   let product: Product;
   try {
-    product = await apiFetch<Product>(`/products/${encodeURIComponent(idOrSlug)}`);
+    product = await apiFetch<Product>(
+      `/products/${encodeURIComponent(idOrSlug)}`,
+    );
   } catch (error) {
     if (error instanceof ApiRequestError && error.status === 404) {
       return null;
@@ -173,23 +189,24 @@ export async function getProduct(idOrSlug: string): Promise<Product | null> {
 // ── Stock ───────────────────────────────────────────────────────────
 
 export async function getProductStock(idOrSlug: string): Promise<StockInfo> {
-  return apiFetch<StockInfo>(
-    `/products/${encodeURIComponent(idOrSlug)}/stock`
-  );
+  return apiFetch<StockInfo>(`/products/${encodeURIComponent(idOrSlug)}/stock`);
 }
 
 // ── Categories ──────────────────────────────────────────────────────
 
-export async function listCategories(): Promise<Category[]> {
-  return apiFetch<Category[]>("/categories", {
-    cache: "force-cache",
-    next: { revalidate: READ_CACHE_REVALIDATE_SECONDS },
-  });
+export async function getCategories(): Promise<Category[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("categories");
+  return apiFetch<Category[]>("/categories");
 }
 
 // ── Promotions ──────────────────────────────────────────────────────
 
 export async function getPromotion(): Promise<Promotion> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("promotions");
   return apiFetch<Promotion>("/promotions");
 }
 
@@ -201,7 +218,7 @@ export async function createCart(): Promise<{
 }> {
   const { data, response } = await apiRawFetch<CartWithProducts>(
     "/cart/create",
-    { method: "POST" }
+    { method: "POST" },
   );
 
   const token = response.headers.get("x-cart-token");
@@ -221,7 +238,7 @@ export async function getCart(cartToken: string): Promise<CartWithProducts> {
 export async function addItemToCart(
   cartToken: string,
   productId: string,
-  quantity: number
+  quantity: number,
 ): Promise<CartWithProducts> {
   return apiFetch<CartWithProducts>("/cart", {
     method: "POST",
@@ -233,7 +250,7 @@ export async function addItemToCart(
 export async function updateCartItem(
   cartToken: string,
   itemId: string,
-  quantity: number
+  quantity: number,
 ): Promise<CartWithProducts> {
   return apiFetch<CartWithProducts>(`/cart/${encodeURIComponent(itemId)}`, {
     method: "PATCH",
@@ -244,7 +261,7 @@ export async function updateCartItem(
 
 export async function removeCartItem(
   cartToken: string,
-  itemId: string
+  itemId: string,
 ): Promise<CartWithProducts> {
   return apiFetch<CartWithProducts>(`/cart/${encodeURIComponent(itemId)}`, {
     method: "DELETE",

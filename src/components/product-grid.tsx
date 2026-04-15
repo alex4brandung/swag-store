@@ -1,5 +1,5 @@
-import { cacheTag } from "next/cache";
 import { listProducts } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 import { ProductCard } from "./product-card";
 
 interface FeaturedProductsProps {
@@ -8,7 +8,9 @@ interface FeaturedProductsProps {
 
 export async function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   "use cache";
-  cacheTag("featured-products");
+  cacheLife("minutes");
+  cacheTag("products");
+  cacheTag("products:featured:true");
 
   const products = await listProducts({ featured: true, limit });
 

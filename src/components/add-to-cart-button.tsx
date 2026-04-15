@@ -8,12 +8,14 @@ import { QuantitySelector } from "./quantity-selector";
 
 interface AddToCartButtonProps {
   productId: string;
+  productSlug: string;
   maxStock: number;
   inStock: boolean;
 }
 
 export function AddToCartButton({
   productId,
+  productSlug,
   maxStock,
   inStock,
 }: AddToCartButtonProps) {
@@ -25,7 +27,7 @@ export function AddToCartButton({
   async function handleAddToCart() {
     setIsLoading(true);
     setError(null);
-    const result = await addToCartAction(productId, quantity);
+    const result = await addToCartAction(productId, quantity, productSlug);
     setIsLoading(false);
     if (result.success) {
       openCart(result.cart);
