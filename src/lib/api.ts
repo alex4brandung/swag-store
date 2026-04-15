@@ -2,6 +2,7 @@ import type {
   ApiResponse,
   CartWithProducts,
   Category,
+  PaginationMeta,
   Product,
   Promotion,
   StockInfo,
@@ -31,7 +32,11 @@ function getSwagApiEnv(): { baseUrl: string; bypassToken: string } {
 async function apiRawFetch<T>(
   path: string,
   options: RequestInit = {}
-): Promise<{ data: T; response: Response }> {
+): Promise<{
+  data: T;
+  response: Response;
+  meta?: { pagination?: PaginationMeta };
+}> {
   const { baseUrl, bypassToken } = getSwagApiEnv();
   const url = `${baseUrl}${path}`;
   const res = await fetch(url, {
@@ -54,7 +59,7 @@ async function apiRawFetch<T>(
   if (!body.success) {
     throw new Error(body.error.message);
   }
-  return { data: body.data, response: res };
+  return { data: body.data, response: res, meta: body.meta };
 }
 
 async function apiFetch<T>(
@@ -75,17 +80,36 @@ export interface ListProductsParams {
   featured?: boolean;
 }
 
-export async function listProducts(
-  params: ListProductsParams = {}
-): Promise<Product[]> {
+function buildListProductsQuery(params: ListProductsParams): string {
   const qs = new URLSearchParams();
   if (params.page != null) qs.set("page", String(params.page));
   if (params.limit != null) qs.set("limit", String(params.limit));
   if (params.category) qs.set("category", params.category);
   if (params.search) qs.set("search", params.search);
   if (params.featured != null) qs.set("featured", String(params.featured));
-  const query = qs.toString();
-  return apiFetch<Product[]>(`/products${query ? `?${query}` : ""}`);
+  return qs.toString();
+}
+
+export interface ListProductsWithMetaResult {
+  products: Product[];
+  pagination?: PaginationMeta;
+}
+
+export async function listProductsWithMeta(
+  params: ListProductsParams = {}
+): Promise<ListProductsWithMetaResult> {
+  const query = buildListProductsQuery(params);
+  const { data, meta } = await apiRawFetch<Product[]>(
+    `/products${query ? `?${query}` : ""}`
+  );
+  return { products: data, pagination: meta?.pagination };
+}
+
+export async function listProducts(
+  params: ListProductsParams = {}
+): Promise<Product[]> {
+  const { products } = await listProductsWithMeta(params);
+  return products;
 }
 
 export async function getProduct(idOrSlug: string): Promise<Product> {

@@ -1,5 +1,5 @@
 import { cacheTag } from "next/cache";
-import { listProducts } from "@/lib/api";
+import { listProductsWithMeta } from "@/lib/api";
 import { SearchEmptyIcon } from "@/components/icons";
 import { ProductCard } from "./product-card";
 
@@ -12,24 +12,28 @@ async function fetchSearchResults(query?: string, category?: string) {
   "use cache";
   cacheTag("search-results");
   const hasActiveSearch = Boolean(query || category);
-  return listProducts({
+  const { products, pagination } = await listProductsWithMeta({
     search: query || undefined,
     category: category || undefined,
     limit: hasActiveSearch ? 5 : 9,
   });
+  return {
+    products,
+    total: pagination?.total ?? products.length,
+  };
 }
 
 export async function SearchResultsCount({ query, category }: SearchResultsProps) {
-  const products = await fetchSearchResults(query, category);
+  const { total } = await fetchSearchResults(query, category);
   return (
     <span className="text-sm font-normal text-muted-foreground">
-      {" "}— {products.length} result{products.length !== 1 ? "s" : ""}
+      {" "}— {total} result{total !== 1 ? "s" : ""}
     </span>
   );
 }
 
 export async function SearchResults({ query, category }: SearchResultsProps) {
-  const products = await fetchSearchResults(query, category);
+  const { products } = await fetchSearchResults(query, category);
 
   if (products.length === 0) {
     return (
