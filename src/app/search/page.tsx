@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
+import { headers } from "next/headers";
 import { listCategories } from "@/lib/api";
 import { logVercelCacheDebug } from "@/lib/vercel-debug";
 import { SearchInput } from "@/components/search-input";
@@ -49,9 +50,13 @@ async function SearchContent({
   searchParams: Promise<{ q?: string; category?: string }>;
 }) {
   const { q, category } = await searchParams;
+  const requestHeaders = await headers();
   logVercelCacheDebug("search.SearchContent.params", {
     query: q ?? null,
     category: category ?? null,
+    requestCacheControl: requestHeaders.get("cache-control"),
+    requestPragma: requestHeaders.get("pragma"),
+    purpose: requestHeaders.get("purpose"),
   });
   const categories = await fetchCategories();
   const isSearching = Boolean(q || category);
