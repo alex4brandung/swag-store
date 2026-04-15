@@ -11,6 +11,10 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+interface ProductPageContentProps {
+  slug: string;
+}
+
 async function fetchProduct(slug: string) {
   "use cache";
   cacheLife("hours");
@@ -44,11 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function ProductPage({ params }: Props) {
+async function ProductPageContent({ slug }: ProductPageContentProps) {
   "use cache";
   cacheLife("hours");
 
-  const { slug } = await params;
   const product = await fetchProductOrNotFound(slug);
   cacheTag(`product-page-${product.id}`);
 
@@ -61,4 +64,9 @@ export default async function ProductPage({ params }: Props) {
       </div>
     </div>
   );
+}
+
+export default async function ProductPage({ params }: Props) {
+  const { slug } = await params;
+  return <ProductPageContent slug={slug} />;
 }
