@@ -11,10 +11,11 @@ interface SearchResultsProps {
 async function fetchSearchResults(query?: string, category?: string) {
   "use cache";
   cacheTag("search-results");
+  const hasActiveSearch = Boolean(query || category);
   return listProducts({
     search: query || undefined,
     category: category || undefined,
-    limit: 5,
+    limit: hasActiveSearch ? 5 : 9,
   });
 }
 

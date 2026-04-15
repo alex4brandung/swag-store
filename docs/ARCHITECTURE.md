@@ -278,6 +278,15 @@ All search state lives in the URL as query parameters (`?q=...&category=...`). T
 
 The component uses `useRouter().replace()` (not `push`) to avoid polluting browser history with every keystroke.
 
+### Result limits by state
+
+`SearchResults` applies different limits depending on whether the user is actively searching:
+
+- **Default browse state** (`q` and `category` empty): fetches **9 products**.
+- **Active search/filter state** (query and/or category present): fetches **up to 5 products**.
+
+This matches the assignment intent: show a useful default product set before searching, then cap matched results at five once a search is performed.
+
 ### Suspense key for fresh results
 
 The search results `<Suspense>` boundary uses a `key` prop derived from the current query and category:
