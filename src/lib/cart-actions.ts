@@ -18,6 +18,10 @@ type CartActionResult =
 const CART_TOKEN_COOKIE = "cart-token";
 const MAX_QUANTITY = 99;
 
+function updateProductStockTag(productId: string): void {
+  updateTag(`product-stock-${productId}`);
+}
+
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -72,6 +76,7 @@ export async function addToCartAction(
     const token = await ensureCart();
     const cart = await addItemToCart(token, productId, quantity);
     updateTag(`cart-${token}`);
+    updateProductStockTag(productId);
     return { success: true, cart };
   } catch (err) {
     return {
@@ -82,11 +87,11 @@ export async function addToCartAction(
 }
 
 export async function updateCartItemAction(
-  itemId: string,
+  productId: string,
   quantity: number
 ): Promise<CartActionResult> {
-  if (!isNonEmptyString(itemId)) {
-    return { success: false, error: "Invalid item ID" };
+  if (!isNonEmptyString(productId)) {
+    return { success: false, error: "Invalid product ID" };
   }
   if (!isValidQuantity(quantity)) {
     return { success: false, error: "Quantity must be an integer between 1 and 99" };
@@ -95,8 +100,9 @@ export async function updateCartItemAction(
   try {
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
-    const cart = await updateItem(token, itemId, quantity);
+    const cart = await updateItem(token, productId, quantity);
     updateTag(`cart-${token}`);
+    updateProductStockTag(productId);
     return { success: true, cart };
   } catch (err) {
     return {
@@ -107,17 +113,18 @@ export async function updateCartItemAction(
 }
 
 export async function removeCartItemAction(
-  itemId: string
+  productId: string
 ): Promise<CartActionResult> {
-  if (!isNonEmptyString(itemId)) {
-    return { success: false, error: "Invalid item ID" };
+  if (!isNonEmptyString(productId)) {
+    return { success: false, error: "Invalid product ID" };
   }
 
   try {
     const token = await getCartToken();
     if (!token) return { success: false, error: "No cart found" };
-    const cart = await removeItem(token, itemId);
+    const cart = await removeItem(token, productId);
     updateTag(`cart-${token}`);
+    updateProductStockTag(productId);
     return { success: true, cart };
   } catch (err) {
     return {

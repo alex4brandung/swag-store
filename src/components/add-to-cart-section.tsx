@@ -1,4 +1,5 @@
 import { getProductStock } from "@/lib/api";
+import { cacheLife, cacheTag } from "next/cache";
 import { AddToCartButton } from "./add-to-cart-button";
 import { StockIndicator } from "./stock-indicator";
 import type { StockInfo } from "@/lib/types";
@@ -8,13 +9,24 @@ interface AddToCartSectionProps {
   slug: string;
 }
 
+async function getCachedProductStock(
+  productId: string,
+  slug: string
+): Promise<StockInfo> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`product-stock-${productId}`);
+  cacheTag(`product-stock-${slug}`);
+  return getProductStock(slug);
+}
+
 export async function AddToCartSection({
   productId,
   slug,
 }: AddToCartSectionProps) {
   let stock: StockInfo;
   try {
-    stock = await getProductStock(slug);
+    stock = await getCachedProductStock(productId, slug);
   } catch {
     stock = { productId, stock: 0, inStock: false, lowStock: false };
   }
