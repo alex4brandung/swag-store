@@ -1,14 +1,14 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { cacheLife, cacheTag } from "next/cache";
-import { listCategories } from "@/lib/api";
-import { SearchInput } from "@/components/search-input";
-import { CategoryFilter } from "@/components/category-filter";
-import { SearchResults, SearchResultsCount } from "@/components/search-results";
 import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
+import { SearchControls } from "@/components/search-page/search-controls";
+import { SearchHeader } from "@/components/search-page/search-header";
+import { SearchHeaderSkeleton } from "@/components/search-page/search-header-skeleton";
+import { SearchResultsPanel } from "@/components/search-page/search-results-panel";
+import type { SearchParams } from "@/components/search-page/types";
 
 interface Props {
-  searchParams: Promise<{ q?: string; category?: string }>;
+  searchParams: Promise<SearchParams>;
 }
 
 export const metadata: Metadata = {
@@ -22,85 +22,16 @@ export const metadata: Metadata = {
   },
 };
 
-async function fetchCategories() {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("categories");
-  return listCategories();
-}
-
-function SearchPageSkeleton() {
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-pulse">
-      <div className="h-8 bg-border rounded w-40 mb-6" />
-      <div className="flex gap-3 mb-8">
-        <div className="flex-1 h-11 bg-muted border border-border rounded-lg" />
-        <div className="w-36 h-11 bg-muted border border-border rounded-lg" />
-      </div>
-      <ProductGridSkeleton />
-    </div>
-  );
-}
-
-async function SearchContent({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string; category?: string }>;
-}) {
-  const { q, category } = await searchParams;
-  const categories = await fetchCategories();
-  const isSearching = Boolean(q || category);
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground mb-6">
-          {isSearching ? (
-            <>
-              Search Results{" "}
-              <span className="text-sm font-normal text-muted-foreground">
-                {[q && `for "${q}"`, category && `in ${category}`]
-                  .filter(Boolean)
-                  .join(" ")}
-              </span>
-              <Suspense>
-                <SearchResultsCount query={q} category={category} />
-              </Suspense>
-            </>
-          ) : (
-            "All Products"
-          )}
-        </h1>
-
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1">
-            <Suspense>
-              <SearchInput defaultValue={q ?? ""} />
-            </Suspense>
-          </div>
-          <Suspense>
-            <CategoryFilter
-              categories={categories}
-              selectedCategory={category ?? ""}
-            />
-          </Suspense>
-        </div>
-      </div>
-
-      <Suspense
-        key={`${q ?? ""}-${category ?? ""}`}
-        fallback={<ProductGridSkeleton />}
-      >
-        <SearchResults query={q} category={category} />
-      </Suspense>
-    </div>
-  );
-}
-
 export default function SearchPage({ searchParams }: Props) {
   return (
-    <Suspense fallback={<SearchPageSkeleton />}>
-      <SearchContent searchParams={searchParams} />
-    </Suspense>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <Suspense fallback={<SearchHeaderSkeleton />}>
+        <SearchHeader searchParams={searchParams} />
+      </Suspense>
+      <SearchControls />
+      <Suspense fallback={<ProductGridSkeleton />}>
+        <SearchResultsPanel searchParams={searchParams} />
+      </Suspense>
+    </div>
   );
 }

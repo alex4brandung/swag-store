@@ -1,37 +1,42 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "./icons";
 
-interface SearchInputProps {
-  defaultValue?: string;
-}
-
-export function SearchInput({ defaultValue = "" }: SearchInputProps) {
+export function SearchInput() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
+  function syncFromLocation() {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    setValue(params.get("q") ?? "");
+  }
 
   useEffect(() => {
+    syncFromLocation();
+    function handlePopState() {
+      syncFromLocation();
+    }
+    window.addEventListener("popstate", handlePopState);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
   function navigate(query: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
     if (query) {
       params.set("q", query);
     } else {
       params.delete("q");
     }
-    router.replace(`/search?${params.toString()}`);
+    const nextQuery = params.toString();
+    router.replace(nextQuery ? `/search?${nextQuery}` : "/search");
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {

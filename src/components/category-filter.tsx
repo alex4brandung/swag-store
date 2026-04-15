@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -13,7 +13,6 @@ import type { Category } from "@/lib/types";
 
 interface CategoryFilterProps {
   categories: Category[];
-  selectedCategory?: string;
 }
 
 interface CategoryOption {
@@ -23,10 +22,9 @@ interface CategoryOption {
 
 export function CategoryFilter({
   categories,
-  selectedCategory = "",
 }: CategoryFilterProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -49,18 +47,32 @@ export function CategoryFilter({
 
   const applyValue = useCallback(
     (value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+      if (typeof window === "undefined") return;
+      const params = new URLSearchParams(window.location.search);
       if (value) {
         params.set("category", value);
       } else {
         params.delete("category");
       }
-      router.replace(`/search?${params.toString()}`);
+      setSelectedCategory(value);
+      const nextQuery = params.toString();
+      router.replace(nextQuery ? `/search?${nextQuery}` : "/search");
       setOpen(false);
       triggerRef.current?.focus();
     },
-    [router, searchParams],
+    [router],
   );
+
+  useEffect(() => {
+    function syncFromLocation() {
+      if (typeof window === "undefined") return;
+      const params = new URLSearchParams(window.location.search);
+      setSelectedCategory(params.get("category") ?? "");
+    }
+    syncFromLocation();
+    window.addEventListener("popstate", syncFromLocation);
+    return () => window.removeEventListener("popstate", syncFromLocation);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
