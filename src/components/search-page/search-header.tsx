@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { SearchResultsCount } from "./search-results";
-import { normalizeSearchParam } from "./normalize-search-param";
+import { SearchResultsCount } from "./search-results-count";
+import { normalizeSearchParam } from "./utils/normalize-search-param";
 import type { SearchSectionProps } from "./types";
 
 export async function SearchHeader({ searchParams }: SearchSectionProps) {
@@ -15,14 +15,18 @@ export async function SearchHeader({ searchParams }: SearchSectionProps) {
         <>
           Search Results{" "}
           <span className="text-sm font-normal text-muted-foreground">
-            {[query && `for "${query}"`, normalizedCategory && `in ${normalizedCategory}`]
+            {[
+              query && `for "${query}"`,
+              normalizedCategory && `in ${normalizedCategory}`,
+            ]
               .filter(Boolean)
               .join(" ")}
           </span>
           <Suspense
             fallback={
               <span className="text-sm font-normal text-muted-foreground">
-                {" "}— ...
+                {" "}
+                — ...
               </span>
             }
           >

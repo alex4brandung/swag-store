@@ -141,7 +141,7 @@ export interface ListProductsWithMetaResult {
   pagination?: PaginationMeta;
 }
 
-export async function listProductsWithMeta(
+export async function getProductsWithMeta(
   params: ListProductsParams = {},
 ): Promise<ListProductsWithMetaResult> {
   "use cache";
@@ -160,10 +160,10 @@ export async function listProductsWithMeta(
   return { products: data, pagination: meta?.pagination };
 }
 
-export async function listProducts(
+export async function getProducts(
   params: ListProductsParams = {},
 ): Promise<Product[]> {
-  const { products } = await listProductsWithMeta(params);
+  const { products } = await getProductsWithMeta(params);
   return products;
 }
 

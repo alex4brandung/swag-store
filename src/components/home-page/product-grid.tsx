@@ -1,4 +1,4 @@
-import { listProducts } from "@/lib/api";
+import { getProducts } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 import { ProductCard } from "@/components/product-card";
 
@@ -12,7 +12,7 @@ export async function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   cacheTag("products");
   cacheTag("products:featured:true");
 
-  const products = await listProducts({ featured: true, limit });
+  const products = await getProducts({ featured: true, limit });
 
   if (products.length === 0) {
     return (

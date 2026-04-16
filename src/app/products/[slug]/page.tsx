@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getProduct, listProductsWithMeta } from "@/lib/api";
+import { getProduct, getProductsWithMeta } from "@/lib/api";
 import { ProductBreadcrumb } from "@/components/product-detail-page/product-breadcrumb";
 import { ProductImagePanel } from "@/components/product-detail-page/product-image-panel";
 import { ProductInfoPanel } from "@/components/product-detail-page/product-info-panel";
@@ -15,17 +15,18 @@ interface ProductPageContentProps {
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const pageSize = 100;
-  const { products: firstPageProducts, pagination } =
-    await listProductsWithMeta({
+  const { products: firstPageProducts, pagination } = await getProductsWithMeta(
+    {
       page: 1,
       limit: pageSize,
-    });
+    },
+  );
 
   const allProducts = [...firstPageProducts];
   const totalPages = pagination?.totalPages ?? 1;
 
   for (let page = 2; page <= totalPages; page += 1) {
-    const { products } = await listProductsWithMeta({
+    const { products } = await getProductsWithMeta({
       page,
       limit: pageSize,
     });

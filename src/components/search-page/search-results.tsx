@@ -1,55 +1,23 @@
-import { listProductsWithMeta } from "@/lib/api";
-import { cacheLife, cacheTag } from "next/cache";
 import { SearchEmptyIcon } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
-import { normalizeSearchParam } from "./normalize-search-param";
+import { getProductsWithMeta } from "@/lib/api";
+import { getSearchPageProductLimit } from "./utils/search-list-limit";
+import { normalizeSearchParam } from "./utils/normalize-search-param";
 import type { SearchParams } from "./types";
 
 interface SearchResultsProps {
   searchParams: Promise<SearchParams>;
 }
 
-interface SearchResultsFilters {
-  query?: string;
-  category?: string;
-}
-
-async function fetchSearchResults(query?: string, category?: string) {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag("products");
-  if (category) {
-    cacheTag(`products:category:${encodeURIComponent(category.toLowerCase())}`);
-  }
-  const hasActiveSearch = Boolean(query || category);
-  const { products, pagination } = await listProductsWithMeta({
-    search: query || undefined,
-    category: category || undefined,
-    limit: hasActiveSearch ? 5 : 9,
-  });
-  return {
-    products,
-    total: pagination?.total ?? products.length,
-  };
-}
-
-export async function SearchResultsCount({
-  query,
-  category,
-}: SearchResultsFilters) {
-  const { total } = await fetchSearchResults(query, category);
-  return (
-    <span className="text-sm font-normal text-muted-foreground">
-      {" "}— {total} result{total !== 1 ? "s" : ""}
-    </span>
-  );
-}
-
 export async function SearchResults({ searchParams }: SearchResultsProps) {
   const { q, category } = await searchParams;
   const query = normalizeSearchParam(q);
   const normalizedCategory = normalizeSearchParam(category);
-  const { products } = await fetchSearchResults(query, normalizedCategory);
+  const { products } = await getProductsWithMeta({
+    search: query || undefined,
+    category: normalizedCategory || undefined,
+    limit: getSearchPageProductLimit(Boolean(query)),
+  });
 
   if (products.length === 0) {
     return (
@@ -58,9 +26,7 @@ export async function SearchResults({ searchParams }: SearchResultsProps) {
           <SearchEmptyIcon className="text-muted-foreground" />
         </div>
         <div className="text-center">
-          <p className="font-medium text-foreground">
-            No products found
-          </p>
+          <p className="font-medium text-foreground">No products found</p>
           <p className="text-sm text-muted-foreground mt-1">
             {query
               ? `No results for "${query}". Try a different search term.`
