@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/components/cart/cart-context";
 import { getSiteUrl } from "@/lib/site-url";
+import LoadingBar from 'nextjs-toploader';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -55,6 +56,7 @@ export default function RootLayout({
         <meta name="generator" content="vswag-cert-v3" />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
+      <LoadingBar showSpinner={false} />
         <CartProvider>
           <Header />
           <main className="flex-1">{children}</main>
