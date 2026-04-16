@@ -10,18 +10,31 @@ interface SearchContentProps {
   searchParams: Promise<SearchParams>;
 }
 
-export async function SearchContent({ searchParams }: SearchContentProps) {
-  const { q, category } = await searchParams;
-  const resultsBoundaryKey = `${q ?? ""}::${category ?? ""}`;
+interface SearchResultsContainerProps {
+  searchParams: Promise<SearchParams>;
+}
 
+async function SearchResultsContainer({
+  searchParams,
+}: SearchResultsContainerProps) {
+  const { q, category } = await searchParams;
+
+  return (
+    <Suspense key={`${q ?? ""}::${category ?? ""}`} fallback={<ProductGridSkeleton />}>
+      <SearchResults query={q} category={category} />
+    </Suspense>
+  );
+}
+
+export function SearchContent({ searchParams }: SearchContentProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <Suspense fallback={<SearchHeaderSkeleton />}>
         <SearchHeader searchParams={searchParams} />
       </Suspense>
       <SearchControls />
-      <Suspense key={resultsBoundaryKey} fallback={<ProductGridSkeleton />}>
-        <SearchResults query={q} category={category} />
+      <Suspense fallback={<ProductGridSkeleton />}>
+        <SearchResultsContainer searchParams={searchParams} />
       </Suspense>
     </div>
   );
