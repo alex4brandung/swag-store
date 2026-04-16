@@ -12,6 +12,7 @@ interface SearchContentProps {
 
 export async function SearchContent({ searchParams }: SearchContentProps) {
   const { q, category } = await searchParams;
+  const resultsBoundaryKey = `${q ?? ""}::${category ?? ""}`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -19,12 +20,8 @@ export async function SearchContent({ searchParams }: SearchContentProps) {
         <SearchHeader searchParams={searchParams} />
       </Suspense>
       <SearchControls />
-      <Suspense fallback={<ProductGridSkeleton />}>
-        <SearchResults
-          key={`${q ?? ""}-${category ?? ""}`}
-          query={q}
-          category={category}
-        />
+      <Suspense key={resultsBoundaryKey} fallback={<ProductGridSkeleton />}>
+        <SearchResults query={q} category={category} />
       </Suspense>
     </div>
   );
