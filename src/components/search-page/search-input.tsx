@@ -1,37 +1,27 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "@/components/icons";
 
 export function SearchInput() {
   const router = useRouter();
-  const [value, setValue] = useState(() => {
-    if (typeof window === "undefined") return "";
-    const params = new URLSearchParams(window.location.search);
-    return params.get("q") ?? "";
-  });
+  const searchParams = useSearchParams();
+  const qParam = searchParams.get("q") ?? "";
+  const [value, setValue] = useState(qParam);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function getQueryFromLocation() {
-    if (typeof window === "undefined") return;
-    const params = new URLSearchParams(window.location.search);
-    return params.get("q") ?? "";
-  }
+  useEffect(() => {
+    setValue(qParam);
+  }, [qParam]);
 
   useEffect(() => {
-    function handlePopState() {
-      setValue(getQueryFromLocation() ?? "");
-    }
-    window.addEventListener("popstate", handlePopState);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      window.removeEventListener("popstate", handlePopState);
     };
   }, []);
 
   function navigate(query: string) {
-    if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     if (query) {
       params.set("q", query);
