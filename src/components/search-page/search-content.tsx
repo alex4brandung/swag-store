@@ -14,13 +14,23 @@ interface SearchResultsContainerProps {
   searchParams: Promise<SearchParams>;
 }
 
+function searchParamsToKey(q: string | undefined, category: string | undefined): string {
+  const sp = new URLSearchParams();
+  if (q) sp.set("q", q);
+  if (category) sp.set("category", category);
+  return sp.toString();
+}
+
 async function SearchResultsContainer({
   searchParams,
 }: SearchResultsContainerProps) {
   const { q, category } = await searchParams;
 
   return (
-    <Suspense key={`${q ?? ""}::${category ?? ""}`} fallback={<ProductGridSkeleton />}>
+    <Suspense
+      key={searchParamsToKey(q, category)}
+      fallback={<ProductGridSkeleton />}
+    >
       <SearchResults query={q} category={category} />
     </Suspense>
   );
