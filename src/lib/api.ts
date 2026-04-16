@@ -167,6 +167,16 @@ export async function getProducts(
   return products;
 }
 
+export async function searchProducts(
+  params: ListProductsParams = {},
+): Promise<ListProductsWithMetaResult> {
+  const query = buildListProductsQuery(params);
+  const { data, meta } = await apiRawFetch<Product[]>(
+    `/products${query ? `?${query}` : ""}`,
+  );
+  return { products: data, pagination: meta?.pagination };
+}
+
 export async function getProduct(idOrSlug: string): Promise<Product | null> {
   "use cache";
   cacheLife("hours");

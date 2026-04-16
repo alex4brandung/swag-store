@@ -1,22 +1,24 @@
 import { SearchEmptyIcon } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
-import { getProductsWithMeta } from "@/lib/api";
+import { searchProducts } from "@/lib/api";
 import { getSearchPageProductLimit } from "./utils/search-list-limit";
 import { normalizeSearchParam } from "./utils/normalize-search-param";
-import type { SearchParams } from "./types";
 
 interface SearchResultsProps {
-  searchParams: Promise<SearchParams>;
+  query?: string;
+  category?: string;
 }
 
-export async function SearchResults({ searchParams }: SearchResultsProps) {
-  const { q, category } = await searchParams;
-  const query = normalizeSearchParam(q);
-  const normalizedCategory = normalizeSearchParam(category);
-  const { products } = await getProductsWithMeta({
-    search: query || undefined,
-    category: normalizedCategory || undefined,
-    limit: getSearchPageProductLimit(Boolean(query)),
+export async function SearchResults({
+  query,
+  category,
+}: SearchResultsProps) {
+  const searchQuery = normalizeSearchParam(query);
+  const searchCategory = normalizeSearchParam(category);
+  const { products } = await searchProducts({
+    search: searchQuery || undefined,
+    category: searchCategory || undefined,
+    limit: getSearchPageProductLimit(Boolean(searchQuery)),
   });
 
   if (products.length === 0) {
