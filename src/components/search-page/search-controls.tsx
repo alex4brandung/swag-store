@@ -1,7 +1,7 @@
 import { getCategories } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
-import { CategoryFilter } from "@/components/category-filter";
-import { SearchInput } from "@/components/search-input";
+import { CategoryFilter } from "./category-filter";
+import { SearchInput } from "./search-input";
 
 export async function SearchControls() {
   "use cache";

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HeroScrollCue } from "@/components/hero-scroll-cue";
+import { HeroScrollCue } from "./hero-scroll-cue";
 import { ArrowRightIcon, VercelTriangle } from "@/components/icons";
 
 const HERO_IMAGE_WIDTH = 1376;

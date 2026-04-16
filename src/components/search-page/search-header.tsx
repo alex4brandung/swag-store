@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { SearchResultsCount } from "@/components/search-results";
+import { SearchResultsCount } from "./search-results";
 import { normalizeSearchParam } from "./normalize-search-param";
 import type { SearchSectionProps } from "./types";
 

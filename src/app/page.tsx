@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Hero } from "@/components/hero";
-import { PromoBanner, PromoBannerSkeleton } from "@/components/promo-banner";
-import { FeaturedProducts } from "@/components/product-grid";
+import { Hero } from "@/components/home-page/hero";
+import { PromoBanner, PromoBannerSkeleton } from "@/components/home-page/promo-banner";
+import { FeaturedProducts } from "@/components/home-page/product-grid";
 import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 
 export const metadata: Metadata = {

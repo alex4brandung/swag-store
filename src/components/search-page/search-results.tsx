@@ -1,9 +1,9 @@
 import { listProductsWithMeta } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 import { SearchEmptyIcon } from "@/components/icons";
-import { normalizeSearchParam } from "@/components/search-page/normalize-search-param";
-import type { SearchParams } from "@/components/search-page/types";
-import { ProductCard } from "./product-card";
+import { ProductCard } from "@/components/product-card";
+import { normalizeSearchParam } from "./normalize-search-param";
+import type { SearchParams } from "./types";
 
 interface SearchResultsProps {
   searchParams: Promise<SearchParams>;

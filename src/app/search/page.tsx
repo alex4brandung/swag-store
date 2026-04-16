@@ -4,7 +4,7 @@ import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 import { SearchControls } from "@/components/search-page/search-controls";
 import { SearchHeader } from "@/components/search-page/search-header";
 import { SearchHeaderSkeleton } from "@/components/search-page/search-header-skeleton";
-import { SearchResults } from "@/components/search-results";
+import { SearchResults } from "@/components/search-page/search-results";
 import type { SearchParams } from "@/components/search-page/types";
 
 interface Props {

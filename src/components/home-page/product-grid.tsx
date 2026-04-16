@@ -1,6 +1,6 @@
 import { listProducts } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
-import { ProductCard } from "./product-card";
+import { ProductCard } from "@/components/product-card";
 
 interface FeaturedProductsProps {
   limit?: number;

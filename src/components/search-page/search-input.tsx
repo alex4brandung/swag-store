@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { CloseIcon, SearchIcon } from "./icons";
+import { CloseIcon, SearchIcon } from "@/components/icons";
 
 export function SearchInput() {
   const router = useRouter();
