@@ -19,11 +19,12 @@ export async function SearchContent({ searchParams }: SearchContentProps) {
         <SearchHeader searchParams={searchParams} />
       </Suspense>
       <SearchControls />
-      <Suspense
-        key={`${q ?? ""}-${category ?? ""}`}
-        fallback={<ProductGridSkeleton />}
-      >
-        <SearchResults query={q} category={category} />
+      <Suspense fallback={<ProductGridSkeleton />}>
+        <SearchResults
+          key={`${q ?? ""}-${category ?? ""}`}
+          query={q}
+          category={category}
+        />
       </Suspense>
     </div>
   );
