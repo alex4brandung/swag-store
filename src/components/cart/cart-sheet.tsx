@@ -1,82 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { formatPrice } from "@/lib/utils";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import { cn, formatPrice } from "@/lib/utils";
 import { CloseIcon, ShoppingBagIcon } from "../icons";
 import { CartItem } from "./cart-item";
 import { useCart } from "./cart-context";
 
 export function CartSheet() {
   const { optimisticCart: cart, isOpen, setIsOpen } = useCart();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const previousFocusedElementRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      dialogRef.current?.showModal();
-    } else {
-      dialogRef.current?.close();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog || !isOpen) return;
-
-    previousFocusedElementRef.current =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
-
-    const focusableSelector =
-      'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
-
-    const getFocusableElements = () =>
-      Array.from(
-        dialog.querySelectorAll<HTMLElement>(focusableSelector),
-      ).filter(
-        (element) =>
-          !element.hasAttribute("disabled") &&
-          element.getAttribute("aria-hidden") !== "true" &&
-          element.offsetParent !== null,
-      );
-
-    const focusableElements = getFocusableElements();
-    if (focusableElements.length > 0) {
-      focusableElements[0].focus();
-    } else {
-      dialog.focus();
-    }
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Tab") return;
-
-      const elements = getFocusableElements();
-      if (elements.length === 0) {
-        event.preventDefault();
-        dialog.focus();
-        return;
-      }
-
-      const firstElement = elements[0];
-      const lastElement = elements[elements.length - 1];
-
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault();
-        lastElement.focus();
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      previousFocusedElementRef.current?.focus();
-    };
-  }, [isOpen]);
 
   return (
     <>
@@ -84,47 +22,55 @@ export function CartSheet() {
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label="Open cart"
-        className="relative flex items-center text-foreground hover:text-foreground/80 cursor-pointer"
+        className="relative flex cursor-pointer items-center text-foreground hover:text-foreground/80"
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-accent-foreground text-[10px] font-bold leading-none">
+          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold leading-none text-accent-foreground">
             {(cart?.totalItems ?? 0) > 99 ? "99+" : cart?.totalItems}
           </span>
         )}
       </button>
 
-      <dialog
-        id="cart-sheet-dialog"
-        ref={dialogRef}
-        onClose={() => setIsOpen(false)}
-        onClick={(e) => {
-          if (e.target === dialogRef.current) setIsOpen(false);
-        }}
-        className="fixed inset-0 z-50 m-0 hidden h-dvh max-h-dvh w-full max-w-none border-0 bg-transparent p-0 open:block backdrop:bg-transparent"
-        aria-label="Shopping cart"
+      <Drawer
+        direction="right"
+        open={isOpen}
+        shouldScaleBackground={false}
+        onOpenChange={setIsOpen}
       >
-        <aside className="absolute top-0 right-0 flex h-full min-h-0 w-full min-w-0 max-w-sm flex-col border-l border-border bg-muted text-foreground">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-            <h2 className="text-base font-semibold text-foreground">
+        <DrawerContent
+          className={cn(
+            "flex h-dvh max-h-dvh w-full max-w-sm flex-col gap-0 rounded-none border-0 bg-muted p-0 text-foreground shadow-none",
+            "before:hidden",
+            "data-[vaul-drawer-direction=right]:mt-0 data-[vaul-drawer-direction=right]:max-h-dvh",
+          )}
+        >
+          <DrawerDescription className="sr-only">
+            Shopping cart contents and order summary
+          </DrawerDescription>
+
+          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4">
+            <DrawerTitle className="font-heading text-base font-semibold text-foreground">
               Cart
               {cart && cart.totalItems > 0 && (
-                <span className="ml-2 text-sm text-muted-foreground font-normal">
-                  ({cart.totalItems} {cart.totalItems === 1 ? "item" : "items"})
+                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                  ({cart.totalItems}{" "}
+                  {cart.totalItems === 1 ? "item" : "items"})
                 </span>
               )}
-            </h2>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              aria-label="Close cart"
-              className="text-muted-foreground hover:text-foreground cursor-pointer"
-            >
-              <CloseIcon />
-            </button>
+            </DrawerTitle>
+            <DrawerClose asChild>
+              <button
+                type="button"
+                aria-label="Close cart"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <CloseIcon />
+              </button>
+            </DrawerClose>
           </div>
 
-          <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-5">
+          <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-5">
             {!cart || cart.items.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
                 <ShoppingBagIcon />
@@ -138,8 +84,8 @@ export function CartSheet() {
           </div>
 
           {cart && cart.items.length > 0 && (
-            <div className="px-5 py-5 border-t border-border">
-              <div className="flex items-center justify-between mb-4">
+            <DrawerFooter className="mt-0 shrink-0 border-t border-border px-5 py-5">
+              <div className="mb-4 flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Subtotal</span>
                 <span className="text-base font-semibold text-foreground">
                   {formatPrice(cart.subtotal, cart.currency)}
@@ -147,14 +93,14 @@ export function CartSheet() {
               </div>
               <button
                 type="button"
-                className="w-full rounded-lg bg-accent text-accent-foreground font-semibold py-3 text-sm hover:bg-accent/90 transition-colors cursor-pointer"
+                className="w-full cursor-pointer rounded-lg bg-accent py-3 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent/90"
               >
                 Checkout
               </button>
-            </div>
+            </DrawerFooter>
           )}
-        </aside>
-      </dialog>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
