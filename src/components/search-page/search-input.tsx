@@ -73,7 +73,7 @@ export function SearchInput() {
           onKeyDown={handleKeyDown}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[#555] transition-colors"
+          className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
         />
         {value && (
           <button

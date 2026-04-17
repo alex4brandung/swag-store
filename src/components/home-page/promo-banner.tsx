@@ -61,7 +61,7 @@ export async function PromoBanner() {
               <span className="text-muted-foreground">&middot;</span>
               <span className="inline-flex items-center gap-1">
                 <span className="text-muted-foreground text-xs">Code:</span>
-                <code className="rounded bg-background border border-border px-2 py-0.5 text-xs font-mono font-semibold tracking-wide text-white">
+                <code className="rounded bg-background border border-border px-2 py-0.5 text-xs font-mono font-semibold tracking-wide text-foreground">
                   {promo.code}
                 </code>
               </span>

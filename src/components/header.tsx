@@ -6,6 +6,7 @@ import { getCart } from "@/lib/api";
 import { CartSheet } from "./cart/cart-sheet";
 import { CartInitializer } from "./cart/cart-context";
 import { ShoppingBagIcon, VercelTriangle } from "./icons";
+import { ThemeToggle } from "./theme-toggle";
 import type { CartWithProducts } from "@/lib/types";
 
 async function fetchCachedCart(
@@ -35,7 +36,7 @@ async function CartWrapper() {
 
 function CartFallback() {
   return (
-    <div className="relative flex items-center text-white/80">
+    <div className="relative flex items-center text-foreground/80">
       <ShoppingBagIcon />
     </div>
   );
@@ -47,7 +48,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2.5 text-foreground hover:text-white transition-colors"
+          className="flex items-center gap-2.5 text-foreground hover:opacity-80 transition-opacity"
         >
           <VercelTriangle />
           <span className="text-sm font-semibold tracking-tight">
@@ -68,6 +69,7 @@ export function Header() {
           >
             Search
           </Link>
+          <ThemeToggle />
           <Suspense fallback={<CartFallback />}>
             <CartWrapper />
           </Suspense>

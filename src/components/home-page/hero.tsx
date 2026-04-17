@@ -25,7 +25,8 @@ export function Hero() {
         aria-hidden="true"
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl opacity-10"
         style={{
-          background: "radial-gradient(circle, #ffffff 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, var(--foreground) 0%, transparent 70%)",
         }}
       />
 
@@ -71,7 +72,7 @@ export function Hero() {
                   height={HERO_IMAGE_HEIGHT}
                   priority
                   sizes="(max-width: 1023px) min(100vw - 2rem, 560px), (max-width: 1536px) min(50vw - 2rem, 640px), 640px"
-                  className="h-auto w-full max-h-[min(52vh,28rem)] rounded-2xl border border-border object-cover object-top shadow-[0_24px_64px_rgba(0,0,0,0.35)] lg:max-h-none"
+                  className="h-auto w-full max-h-[min(52vh,28rem)] rounded-2xl border border-border object-cover object-top shadow-[0_12px_32px_rgba(0,0,0,0.18)] lg:max-h-none"
                 />
               </div>
             </div>

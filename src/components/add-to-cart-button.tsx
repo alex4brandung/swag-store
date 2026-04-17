@@ -68,7 +68,7 @@ export function AddToCartButton({
       </button>
 
       {error && (
-        <p className="text-sm font-medium text-red-400" role="status">
+        <p className="text-sm font-medium text-danger-foreground" role="status">
           {error}
         </p>
       )}

@@ -10,9 +10,64 @@ input[type="search"]::-webkit-search-decoration {
   .hero-scroll-chevron {
     animation: none !important;
   }
+  .theme-toggle-icon {
+    transition: none !important;
+  }
+}
+
+.theme-toggle-icon {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 150ms ease-out,
+    opacity 150ms ease-out;
+}
+
+.theme-toggle-icon--moon {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+.theme-toggle-icon--sun {
+  transform: rotate(-90deg) scale(0);
+  opacity: 0;
+}
+
+html[data-theme="dark"] .theme-toggle-icon--moon {
+  transform: rotate(90deg) scale(0);
+  opacity: 0;
+}
+
+html[data-theme="dark"] .theme-toggle-icon--sun {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
 }
 
 :root {
+  color-scheme: light;
+
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --accent: #0a0a0a;
+  --accent-foreground: #fafafa;
+
+  --success: #10b981;
+  --success-foreground: #047857;
+  --danger: #ef4444;
+  --danger-foreground: #b91c1c;
+  --warning: #f59e0b;
+  --warning-foreground: #b45309;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
   --background: #171719;
   --foreground: #ededed;
   --muted: #2a2a2d;
@@ -20,6 +75,13 @@ input[type="search"]::-webkit-search-decoration {
   --border: #2e2e32;
   --accent: #ffffff;
   --accent-foreground: #171719;
+
+  --success: #22c55e;
+  --success-foreground: #4ade80;
+  --danger: #ef4444;
+  --danger-foreground: #f87171;
+  --warning: #fbbf24;
+  --warning-foreground: #fbbf24;
 }
 
 @theme inline {
@@ -30,6 +92,14 @@ input[type="search"]::-webkit-search-decoration {
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

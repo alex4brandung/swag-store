@@ -12,7 +12,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group flex flex-col rounded-xl overflow-hidden border border-border bg-muted hover:border-[#444448] transition-colors"
+      className="group flex flex-col rounded-xl overflow-hidden border border-border bg-muted hover:border-muted-foreground/50 transition-colors"
     >
       <div className="relative aspect-square bg-muted overflow-hidden">
         {product.images[0] ? (
@@ -33,7 +33,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <span className="text-xs text-muted-foreground uppercase tracking-wide">
           {product.category}
         </span>
-        <h3 className="text-sm font-medium text-foreground group-hover:text-white transition-colors leading-snug">
+        <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors leading-snug">
           {product.name}
         </h3>
         <p className="mt-auto pt-2 text-sm font-semibold text-foreground">

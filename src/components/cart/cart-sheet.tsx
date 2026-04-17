@@ -84,7 +84,7 @@ export function CartSheet() {
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label="Open cart"
-        className="relative flex items-center text-white hover:text-white/90 cursor-pointer"
+        className="relative flex items-center text-foreground hover:text-foreground/80 cursor-pointer"
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (

@@ -156,7 +156,7 @@ export function CategoryFilter({
         aria-controls={listId}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={handleTriggerKeyDown}
-        className="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-border bg-muted py-2.5 pl-3 pr-2.5 text-left text-base text-foreground transition-colors hover:bg-muted/80 focus:outline-none focus:border-[#555] sm:text-sm cursor-pointer"
+        className="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-border bg-muted py-2.5 pl-3 pr-2.5 text-left text-base text-foreground transition-colors hover:bg-muted/80 focus:outline-none focus:border-muted-foreground sm:text-sm cursor-pointer"
       >
         <span className="min-w-0 truncate">{selectedLabel}</span>
         <span
