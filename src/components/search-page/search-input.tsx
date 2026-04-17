@@ -73,7 +73,7 @@ export function SearchInput() {
           onKeyDown={handleKeyDown}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
+          className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
         />
         {value && (
           <button
@@ -89,7 +89,7 @@ export function SearchInput() {
       <button
         type="button"
         onClick={handleSearch}
-        className="rounded-lg bg-accent text-accent-foreground font-medium px-4 py-2.5 text-sm hover:bg-accent/90 transition-colors whitespace-nowrap cursor-pointer"
+        className="rounded-lg border border-transparent bg-accent text-accent-foreground font-medium px-4 py-2.5 text-base md:text-sm hover:bg-accent/90 transition-colors whitespace-nowrap cursor-pointer"
       >
         Search
       </button>

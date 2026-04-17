@@ -1,13 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "@/components/icons";
 import type { Category } from "@/lib/types";
 
@@ -20,9 +14,7 @@ type CategoryOption = {
   label: string;
 };
 
-export function CategoryFilter({
-  categories,
-}: CategoryFilterProps) {
+export function CategoryFilter({ categories }: CategoryFilterProps) {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [open, setOpen] = useState(false);
@@ -202,7 +194,10 @@ export function CategoryFilter({
                     <CheckIcon />
                   </span>
                 ) : (
-                  <span className="inline-block w-4 shrink-0" aria-hidden="true" />
+                  <span
+                    className="inline-block w-4 shrink-0"
+                    aria-hidden="true"
+                  />
                 )}
                 <span className="min-w-0 flex-1">{opt.label}</span>
               </button>
