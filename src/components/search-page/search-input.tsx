@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function SearchInput() {
   const router = useRouter();
@@ -67,14 +68,14 @@ export function SearchInput() {
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
           <SearchIcon />
         </div>
-        <input
+        <Input
           type="search"
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
+          className="pl-10 pr-10"
         />
         {value && (
           <Button
@@ -89,7 +90,6 @@ export function SearchInput() {
       </div>
       <Button
         onClick={handleSearch}
-        className="px-4 py-2.5 text-base font-medium md:text-sm"
       >
         Search
       </Button>

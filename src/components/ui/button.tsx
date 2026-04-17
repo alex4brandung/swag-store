@@ -11,8 +11,8 @@ const buttonVariantClasses = {
 } as const;
 
 const buttonSizeClasses = {
-  default: "px-4 py-2.5",
-  sm: "px-3 py-2",
+  default: "h-10 px-3",
+  sm: "h-9 px-2.5",
   icon: "h-8 w-8 p-0",
   iconSm: "h-6 w-6 p-0",
   iconLg: "h-10 w-10 p-0",
