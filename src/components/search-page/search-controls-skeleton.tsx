@@ -1,6 +1,6 @@
 export function SearchControlsSkeleton() {
   return (
-    <div className="mb-8">
+    <div className="mb-5">
       <div className="flex flex-col sm:flex-row gap-3">
         <div
           className="h-[42px] flex-1 rounded-lg border border-border bg-muted animate-pulse"
