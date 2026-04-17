@@ -7,9 +7,6 @@ input[type="search"]::-webkit-search-decoration {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-scroll-chevron {
-    animation: none !important;
-  }
   .theme-toggle-icon {
     transition: none !important;
   }
