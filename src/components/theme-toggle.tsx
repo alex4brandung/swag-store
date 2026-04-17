@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { MoonIcon, SunIcon } from "./icons";
+import { Button } from "./ui/button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -20,12 +21,13 @@ export function ThemeToggle() {
     : "Toggle theme";
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="icon"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={label}
       title={label}
-      className="relative inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+      className="relative rounded-md bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground"
     >
       <span className="theme-toggle-icon theme-toggle-icon--sun inline-flex">
         <SunIcon />
@@ -33,6 +35,6 @@ export function ThemeToggle() {
       <span className="theme-toggle-icon theme-toggle-icon--moon inline-flex">
         <MoonIcon />
       </span>
-    </button>
+    </Button>
   );
 }

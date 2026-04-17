@@ -8,6 +8,7 @@ import {
   DrawerFooter,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 import { cn, formatPrice } from "@/lib/utils";
 import { CloseIcon, ShoppingBagIcon } from "../icons";
 import { CartItem } from "./cart-item";
@@ -18,11 +19,12 @@ export function CartSheet() {
 
   return (
     <>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={() => setIsOpen(true)}
         aria-label="Open cart"
-        className="relative flex cursor-pointer items-center text-foreground hover:text-foreground/80"
+        className="relative bg-transparent text-foreground hover:bg-transparent hover:text-foreground/80"
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (
@@ -30,7 +32,7 @@ export function CartSheet() {
             {(cart?.totalItems ?? 0) > 99 ? "99+" : cart?.totalItems}
           </span>
         )}
-      </button>
+      </Button>
 
       <Drawer
         direction="right"
@@ -60,13 +62,14 @@ export function CartSheet() {
               )}
             </DrawerTitle>
             <DrawerClose asChild>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="icon"
                 aria-label="Close cart"
-                className="text-muted-foreground hover:text-foreground"
+                className="h-auto w-auto rounded-md bg-transparent p-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
               >
                 <CloseIcon />
-              </button>
+              </Button>
             </DrawerClose>
           </div>
 
@@ -91,12 +94,7 @@ export function CartSheet() {
                   {formatPrice(cart.subtotal, cart.currency)}
                 </span>
               </div>
-              <button
-                type="button"
-                className="w-full cursor-pointer rounded-lg bg-accent py-3 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent/90"
-              >
-                Checkout
-              </button>
+              <Button className="w-full py-3">Checkout</Button>
             </DrawerFooter>
           )}
         </DrawerContent>

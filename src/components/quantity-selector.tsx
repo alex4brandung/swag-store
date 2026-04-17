@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+
 type QuantitySelectorProps = {
   value: number;
   max: number;
@@ -15,27 +17,29 @@ export function QuantitySelector({
 }: QuantitySelectorProps) {
   return (
     <div className="flex items-center gap-0 rounded-lg border border-border overflow-hidden w-fit">
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="iconLg"
         onClick={() => value > 1 && onChange(value - 1)}
         disabled={disabled || value <= 1}
         aria-label="Decrease quantity"
-        className="flex h-10 w-10 items-center justify-center text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        className="rounded-none text-foreground hover:bg-muted disabled:opacity-40"
       >
         −
-      </button>
+      </Button>
       <span className="flex h-10 w-12 items-center justify-center text-sm font-medium text-foreground border-x border-border">
         {value}
       </span>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="iconLg"
         onClick={() => value < max && onChange(value + 1)}
         disabled={disabled || value >= max}
         aria-label="Increase quantity"
-        className="flex h-10 w-10 items-center justify-center text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        className="rounded-none text-foreground hover:bg-muted disabled:opacity-40"
       >
         +
-      </button>
+      </Button>
     </div>
   );
 }

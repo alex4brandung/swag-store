@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type ErrorDisplayProps = {
   error: Error & { digest?: string };
@@ -34,13 +35,9 @@ export function ErrorDisplay({
         <p className="text-sm text-muted-foreground max-w-sm">{description}</p>
       </div>
       <div className="flex gap-4">
-        <button
-          type="button"
-          onClick={reset}
-          className="rounded-lg bg-accent text-accent-foreground font-semibold px-5 py-2.5 text-sm hover:bg-accent/90 transition-colors cursor-pointer"
-        >
+        <Button onClick={reset} className="px-5 py-2.5">
           Try again
-        </button>
+        </Button>
         <Link
           href={linkHref}
           className="rounded-lg border border-border text-foreground font-medium px-5 py-2.5 text-sm hover:bg-muted transition-colors"

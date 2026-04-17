@@ -8,6 +8,7 @@ import {
   updateCartItemAction,
 } from "@/lib/cart-actions";
 import { TrashIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
 import type { CartItemWithProduct } from "@/lib/types";
 import { useCart } from "./cart-context";
@@ -107,42 +108,45 @@ export function CartItem({ item }: CartItemProps) {
           {formatPrice(item.product.price, item.product.currency)}
         </p>
         <div className="flex items-center gap-2 mt-2">
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="iconSm"
             onClick={() => handleQuantityChange(item.quantity - 1)}
             disabled={isPending}
             aria-label="Decrease quantity"
-            className="flex h-6 w-6 items-center justify-center rounded border border-border text-foreground hover:bg-muted disabled:opacity-50 cursor-pointer"
+            className="rounded border-border text-foreground"
           >
             −
-          </button>
+          </Button>
           <span className="text-sm w-6 text-center text-muted-foreground">
             {item.quantity}
           </span>
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="iconSm"
             onClick={() => handleQuantityChange(item.quantity + 1)}
             disabled={isPending || item.quantity >= MAX_CART_ITEM_QUANTITY}
             aria-label="Increase quantity"
-            className="flex h-6 w-6 items-center justify-center rounded border border-border text-foreground hover:bg-muted disabled:opacity-50 cursor-pointer"
+            className="rounded border-border text-foreground"
           >
             +
-          </button>
+          </Button>
         </div>
       </div>
       <div className="flex flex-col items-end justify-between">
         <span className="text-sm font-medium text-foreground">
           {formatPrice(item.lineTotal, item.product.currency)}
         </span>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="iconSm"
           onClick={handleRemove}
           disabled={isPending}
           aria-label="Remove item"
-          className="text-muted-foreground hover:text-foreground disabled:opacity-50 cursor-pointer"
+          className="rounded-md text-muted-foreground hover:bg-transparent hover:text-foreground"
         >
           <TrashIcon />
-        </button>
+        </Button>
       </div>
     </div>
   );

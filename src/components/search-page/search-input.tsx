@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 
 export function SearchInput() {
   const router = useRouter();
@@ -76,23 +77,22 @@ export function SearchInput() {
           className="w-full rounded-lg border border-border bg-muted pl-10 pr-10 py-2.5 text-base md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-muted-foreground transition-colors"
         />
         {value && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={handleClear}
             aria-label="Clear search"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+            className="absolute right-3 top-1/2 h-auto w-auto -translate-y-1/2 rounded-md bg-transparent p-0 text-muted-foreground hover:bg-transparent hover:text-foreground"
           >
             <CloseIcon size={14} />
-          </button>
+          </Button>
         )}
       </div>
-      <button
-        type="button"
+      <Button
         onClick={handleSearch}
-        className="rounded-lg border border-transparent bg-accent text-accent-foreground font-medium px-4 py-2.5 text-base md:text-sm hover:bg-accent/90 transition-colors whitespace-nowrap cursor-pointer"
+        className="px-4 py-2.5 text-base font-medium md:text-sm"
       >
         Search
-      </button>
+      </Button>
     </div>
   );
 }

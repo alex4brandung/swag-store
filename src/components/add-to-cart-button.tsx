@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { addToCartAction } from "@/lib/cart-actions";
 import { SpinnerIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import { useCart } from "./cart/cart-context";
 import { QuantitySelector } from "./quantity-selector";
 
@@ -50,12 +51,11 @@ export function AddToCartButton({
         </div>
       )}
 
-      <button
-        type="button"
+      <Button
         onClick={handleAddToCart}
         disabled={!inStock || isLoading}
         aria-label={!inStock ? "Add to cart — out of stock" : undefined}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-accent text-accent-foreground font-semibold px-8 py-3 text-sm hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="w-full px-8 py-3 sm:w-auto"
       >
         {isLoading ? (
           <>
@@ -65,7 +65,7 @@ export function AddToCartButton({
         ) : (
           "Add to Cart"
         )}
-      </button>
+      </Button>
 
       {error && (
         <p className="text-sm font-medium text-danger-foreground" role="status">

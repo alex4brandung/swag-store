@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import type { Category } from "@/lib/types";
 
 type CategoryFilterProps = {
@@ -139,16 +140,16 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
       ref={containerRef}
       className="relative w-full min-w-0 sm:w-auto sm:min-w-48"
     >
-      <button
+      <Button
         ref={triggerRef}
-        type="button"
+        variant="muted"
         id={`${listId}-trigger`}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={handleTriggerKeyDown}
-        className="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-border bg-muted py-2.5 pl-3 pr-2.5 text-left text-base text-foreground transition-colors hover:bg-muted/80 focus:outline-none focus:border-muted-foreground sm:text-sm cursor-pointer"
+        className="flex w-full min-w-0 justify-between gap-2 py-2.5 pl-3 pr-2.5 text-left text-base sm:text-sm"
       >
         <span className="min-w-0 truncate">{selectedLabel}</span>
         <span
@@ -157,7 +158,7 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
         >
           <ChevronDownIcon size={12} strokeWidth={2.5} />
         </span>
-      </button>
+      </Button>
 
       {open ? (
         <div
@@ -169,12 +170,12 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
           {options.map((opt, index) => {
             const isSelected = opt.value === selectedCategory;
             return (
-              <button
+              <Button
                 key={opt.value === "" ? "__all__" : opt.value}
                 ref={(node) => {
                   optionRefs.current[index] = node;
                 }}
-                type="button"
+                variant="ghost"
                 role="option"
                 aria-selected={isSelected}
                 tabIndex={-1}
@@ -184,7 +185,7 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
                   isSelected
                     ? "bg-muted text-foreground"
                     : "text-foreground hover:bg-muted/60"
-                } cursor-pointer`}
+                }`}
               >
                 {isSelected ? (
                   <span
@@ -200,7 +201,7 @@ export function CategoryFilter({ categories }: CategoryFilterProps) {
                   />
                 )}
                 <span className="min-w-0 flex-1">{opt.label}</span>
-              </button>
+              </Button>
             );
           })}
         </div>
