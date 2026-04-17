@@ -1,4 +1,4 @@
-import { ProductCard } from "@/components/product-card";
+import { ProductGrid } from "@/components/product-grid";
 import { searchProducts } from "@/lib/api";
 import { SEARCH_RESULTS_SUMMARY_MIN_HEIGHT_CLASS } from "./search-results-constants";
 import { SearchResultsEmpty } from "./search-results-empty";
@@ -40,11 +40,7 @@ export async function SearchResultsContent({
           category={searchCategory ?? ""}
         />
       </section>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ProductGrid products={products} />
     </>
   );
 }

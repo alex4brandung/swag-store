@@ -7,9 +7,10 @@ import type { Product } from "@/lib/types";
 
 type ProductCardProps = {
   product: Product;
+  imageLoading?: "eager" | "lazy";
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, imageLoading = "lazy" }: ProductCardProps) {
   return (
     <Link href={`/products/${product.slug}`} className="group block h-full">
       <Card className="h-full gap-0 overflow-hidden bg-muted py-0 transition-colors group-hover:ring-foreground/30">
@@ -19,6 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
               src={product.images[0]}
               alt={product.name}
               fill
+              loading={imageLoading}
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />

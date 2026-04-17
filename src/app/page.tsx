@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Hero } from "@/components/home-page/hero";
 import { PromoBanner, PromoBannerSkeleton } from "@/components/home-page/promo-banner";
-import { FeaturedProducts } from "@/components/home-page/product-grid";
+import { FeaturedProducts } from "@/components/home-page/featured-products";
 import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 
 export const metadata: Metadata = {
