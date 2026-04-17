@@ -1,7 +1,7 @@
-interface IconProps {
+type IconProps = {
   size?: number;
   className?: string;
-}
+};
 
 export function VercelTriangle({ size = 16, className }: IconProps) {
   return (
@@ -38,9 +38,9 @@ export function CloseIcon({ size = 18, className }: IconProps) {
   );
 }
 
-interface ChevronDownIconProps extends IconProps {
+type ChevronDownIconProps = IconProps & {
   strokeWidth?: number;
-}
+};
 
 export function ChevronDownIcon({
   size = 16,

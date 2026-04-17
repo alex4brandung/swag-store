@@ -6,10 +6,10 @@ import { SearchResultsSummary } from "./search-results-summary";
 import { getSearchPageProductLimit } from "./utils/search-list-limit";
 import { normalizeSearchParam } from "./utils/normalize-search-param";
 
-export interface SearchResultsContentProps {
+export type SearchResultsContentProps = {
   q?: string;
   category?: string;
-}
+};
 
 export async function SearchResultsContent({
   q,

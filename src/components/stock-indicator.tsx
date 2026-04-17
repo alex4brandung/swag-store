@@ -1,8 +1,8 @@
 import type { StockInfo } from "@/lib/types";
 
-interface StockIndicatorProps {
+type StockIndicatorProps = {
   stock: StockInfo;
-}
+};
 
 export function StockIndicator({ stock }: StockIndicatorProps) {
   if (!stock.inStock) {

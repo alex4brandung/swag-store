@@ -1,4 +1,4 @@
-export interface Product {
+export type Product = {
   id: string;
   name: string;
   slug: string;
@@ -10,22 +10,22 @@ export interface Product {
   featured: boolean;
   tags: string[];
   createdAt: string;
-}
+};
 
-export interface StockInfo {
+export type StockInfo = {
   productId: string;
   stock: number;
   inStock: boolean;
   lowStock: boolean;
-}
+};
 
-export interface Category {
+export type Category = {
   slug: string;
   name: string;
   productCount: number;
-}
+};
 
-export interface Promotion {
+export type Promotion = {
   id: string;
   title: string;
   description: string;
@@ -34,17 +34,17 @@ export interface Promotion {
   validFrom: string;
   validUntil: string;
   active: boolean;
-}
+};
 
-export interface CartItemWithProduct {
+export type CartItemWithProduct = {
   productId: string;
   quantity: number;
   addedAt: string;
   product: Product;
   lineTotal: number;
-}
+};
 
-export interface CartWithProducts {
+export type CartWithProducts = {
   token: string;
   items: CartItemWithProduct[];
   totalItems: number;
@@ -52,32 +52,32 @@ export interface CartWithProducts {
   currency: string;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-export interface PaginationMeta {
+export type PaginationMeta = {
   page: number;
   limit: number;
   total: number;
   totalPages: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
-}
+};
 
-export interface ApiSuccess<T> {
+export type ApiSuccess<T> = {
   success: true;
   data: T;
   meta?: {
     pagination?: PaginationMeta;
   };
-}
+};
 
-export interface ApiError {
+export type ApiError = {
   success: false;
   error: {
     code: string;
     message: string;
     details?: unknown;
   };
-}
+};
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiError;

@@ -1,8 +1,8 @@
-export interface SearchResultsSummaryProps {
+export type SearchResultsSummaryProps = {
   total: number;
   query: string;
   category: string;
-}
+};
 
 export function SearchResultsSummary({
   total,

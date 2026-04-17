@@ -4,9 +4,9 @@ import { VercelTriangle } from "@/components/icons";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/types";
 
-interface ProductCardProps {
+type ProductCardProps = {
   product: Product;
-}
+};
 
 export function ProductCard({ product }: ProductCardProps) {
   return (

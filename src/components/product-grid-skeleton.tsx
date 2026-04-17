@@ -1,6 +1,6 @@
-interface ProductGridSkeletonProps {
+type ProductGridSkeletonProps = {
   count?: number;
-}
+};
 
 export function ProductGridSkeleton({ count = 6 }: ProductGridSkeletonProps) {
   return (

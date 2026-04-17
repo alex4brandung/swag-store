@@ -11,14 +11,14 @@ import {
 import { CheckIcon, ChevronDownIcon } from "@/components/icons";
 import type { Category } from "@/lib/types";
 
-interface CategoryFilterProps {
+type CategoryFilterProps = {
   categories: Category[];
-}
+};
 
-interface CategoryOption {
+type CategoryOption = {
   value: string;
   label: string;
-}
+};
 
 export function CategoryFilter({
   categories,

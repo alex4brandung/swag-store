@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { VercelTriangle } from "@/components/icons";
 
-interface ProductImagePanelProps {
+type ProductImagePanelProps = {
   imageUrl?: string;
   productName: string;
-}
+};
 
 export function ProductImagePanel({ imageUrl, productName }: ProductImagePanelProps) {
   return (

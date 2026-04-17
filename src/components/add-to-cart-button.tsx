@@ -6,12 +6,12 @@ import { SpinnerIcon } from "@/components/icons";
 import { useCart } from "./cart/cart-context";
 import { QuantitySelector } from "./quantity-selector";
 
-interface AddToCartButtonProps {
+type AddToCartButtonProps = {
   productId: string;
   productSlug: string;
   maxStock: number;
   inStock: boolean;
-}
+};
 
 export function AddToCartButton({
   productId,

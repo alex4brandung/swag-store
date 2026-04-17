@@ -114,13 +114,13 @@ async function apiFetch<T>(
 
 // ── Products ────────────────────────────────────────────────────────
 
-export interface ListProductsParams {
+export type ListProductsParams = {
   page?: number;
   limit?: number;
   category?: string;
   search?: string;
   featured?: boolean;
-}
+};
 
 function buildListProductsQuery(params: ListProductsParams): string {
   const qs = new URLSearchParams();
@@ -136,10 +136,10 @@ function toTagSegment(value: string): string {
   return encodeURIComponent(value.trim().toLowerCase());
 }
 
-export interface ListProductsWithMetaResult {
+export type ListProductsWithMetaResult = {
   products: Product[];
   pagination?: PaginationMeta;
-}
+};
 
 export async function getProductsWithMeta(
   params: ListProductsParams = {},

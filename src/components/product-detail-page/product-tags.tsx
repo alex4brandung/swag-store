@@ -1,6 +1,6 @@
-interface ProductTagsProps {
+type ProductTagsProps = {
   tags: string[];
-}
+};
 
 export function ProductTags({ tags }: ProductTagsProps) {
   if (tags.length === 0) {

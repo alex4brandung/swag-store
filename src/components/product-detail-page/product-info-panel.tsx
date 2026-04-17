@@ -5,9 +5,9 @@ import { ProductPurchaseSection } from "@/components/product-detail-page/product
 import { ProductTags } from "@/components/product-detail-page/product-tags";
 import { ProductSummary } from "@/components/product-detail-page/product-summary";
 
-interface ProductInfoPanelProps {
+type ProductInfoPanelProps = {
   product: Product;
-}
+};
 
 function ProductPurchaseSectionFallback() {
   return (

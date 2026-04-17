@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-interface ProductBreadcrumbProps {
+type ProductBreadcrumbProps = {
   category: string;
   productName: string;
-}
+};
 
 export function ProductBreadcrumb({
   category,

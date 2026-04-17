@@ -14,7 +14,7 @@ export type CartOptimisticAction =
   | { type: "update_quantity"; productId: string; quantity: number }
   | { type: "remove_item"; productId: string };
 
-interface CartContextValue {
+type CartContextValue = {
   cart: CartWithProducts | null;
   optimisticCart: CartWithProducts | null;
   setCart: (cart: CartWithProducts | null) => void;
@@ -22,7 +22,7 @@ interface CartContextValue {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   openCart: (cart: CartWithProducts) => void;
-}
+};
 
 function cartReducer(
   state: CartWithProducts | null,

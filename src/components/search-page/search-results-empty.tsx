@@ -1,8 +1,8 @@
 import { SearchEmptyIcon } from "@/components/icons";
 
-export interface SearchResultsEmptyProps {
+export type SearchResultsEmptyProps = {
   query: string;
-}
+};
 
 export function SearchResultsEmpty({ query }: SearchResultsEmptyProps) {
   return (

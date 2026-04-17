@@ -1,11 +1,11 @@
 "use client";
 
-interface QuantitySelectorProps {
+type QuantitySelectorProps = {
   value: number;
   max: number;
   onChange: (value: number) => void;
   disabled?: boolean;
-}
+};
 
 export function QuantitySelector({
   value,

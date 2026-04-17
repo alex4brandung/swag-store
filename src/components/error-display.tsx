@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 
-interface ErrorDisplayProps {
+type ErrorDisplayProps = {
   error: Error & { digest?: string };
   reset: () => void;
   statusCode: string;
@@ -11,7 +11,7 @@ interface ErrorDisplayProps {
   description: string;
   linkHref: string;
   linkLabel: string;
-}
+};
 
 export function ErrorDisplay({
   error,

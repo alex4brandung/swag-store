@@ -1,4 +1,4 @@
-export interface SearchParams {
+export type SearchParams = {
   q?: string;
   category?: string;
-}
+};

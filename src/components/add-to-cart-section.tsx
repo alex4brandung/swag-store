@@ -4,10 +4,10 @@ import { AddToCartButton } from "./add-to-cart-button";
 import { StockIndicator } from "./stock-indicator";
 import type { StockInfo } from "@/lib/types";
 
-interface AddToCartSectionProps {
+type AddToCartSectionProps = {
   productId: string;
   slug: string;
-}
+};
 
 async function getCachedProductStock(
   productId: string,

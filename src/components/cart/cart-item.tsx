@@ -12,9 +12,9 @@ import { formatPrice } from "@/lib/utils";
 import type { CartItemWithProduct } from "@/lib/types";
 import { useCart } from "./cart-context";
 
-interface CartItemProps {
+type CartItemProps = {
   item: CartItemWithProduct;
-}
+};
 
 const MAX_CART_ITEM_QUANTITY = 99;
 

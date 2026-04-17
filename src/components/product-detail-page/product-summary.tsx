@@ -1,12 +1,12 @@
 import { formatPrice } from "@/lib/utils";
 
-interface ProductSummaryProps {
+type ProductSummaryProps = {
   category: string;
   name: string;
   description: string;
   price: number;
   currency: string;
-}
+};
 
 export function ProductSummary({
   category,

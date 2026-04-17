@@ -1,9 +1,9 @@
 import { AddToCartSection } from "@/components/add-to-cart-section";
 
-interface ProductPurchaseSectionProps {
+type ProductPurchaseSectionProps = {
   productId: string;
   slug: string;
-}
+};
 
 export function ProductPurchaseSection({
   productId,

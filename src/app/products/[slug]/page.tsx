@@ -5,13 +5,13 @@ import { ProductBreadcrumb } from "@/components/product-detail-page/product-brea
 import { ProductImagePanel } from "@/components/product-detail-page/product-image-panel";
 import { ProductInfoPanel } from "@/components/product-detail-page/product-info-panel";
 
-interface Props {
+type Props = {
   params: Promise<{ slug: string }>;
-}
+};
 
-interface ProductPageContentProps {
+type ProductPageContentProps = {
   slug: string;
-}
+};
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const pageSize = 100;

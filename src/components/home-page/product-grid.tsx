@@ -2,9 +2,9 @@ import { getProducts } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
 import { ProductCard } from "@/components/product-card";
 
-interface FeaturedProductsProps {
+type FeaturedProductsProps = {
   limit?: number;
-}
+};
 
 export async function FeaturedProducts({ limit = 6 }: FeaturedProductsProps) {
   "use cache";

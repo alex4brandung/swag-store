@@ -8,9 +8,9 @@ import {
 } from "@/components/search-page/search-results";
 import type { SearchParams } from "@/components/search-page/types";
 
-interface Props {
+type Props = {
   searchParams: Promise<SearchParams>;
-}
+};
 
 export const metadata: Metadata = {
   title: "Search Products",
