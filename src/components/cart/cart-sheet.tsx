@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -16,6 +17,15 @@ import { useCart } from "./cart-context";
 
 export function CartSheet() {
   const { optimisticCart: cart, isOpen, setIsOpen } = useCart();
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const frame = requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [isOpen]);
 
   return (
     <>
@@ -63,6 +73,7 @@ export function CartSheet() {
             </DrawerTitle>
             <DrawerClose asChild>
               <Button
+                ref={closeButtonRef}
                 variant="ghost"
                 size="icon"
                 aria-label="Close cart"

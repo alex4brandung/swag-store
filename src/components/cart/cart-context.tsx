@@ -67,12 +67,22 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartWithProducts | null>(null);
   const [optimisticCart, applyOptimistic] = useOptimistic(cart, cartReducer);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpenState] = useState(false);
+
+  const setIsOpen = useCallback((open: boolean) => {
+    if (open) {
+      const activeElement = document.activeElement;
+      if (activeElement instanceof HTMLElement) {
+        activeElement.blur();
+      }
+    }
+    setIsOpenState(open);
+  }, []);
 
   const openCart = useCallback((next: CartWithProducts) => {
     setCart(next);
     setIsOpen(true);
-  }, []);
+  }, [setIsOpen]);
 
   return (
     <CartContext
