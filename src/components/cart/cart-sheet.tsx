@@ -34,7 +34,7 @@ export function CartSheet() {
         size="icon"
         onClick={() => setIsOpen(true)}
         aria-label="Open cart"
-        className="relative bg-transparent text-foreground hover:bg-transparent hover:text-foreground/80"
+        className="relative bg-transparent text-muted-foreground hover:bg-transparent hover:text-foreground"
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (
