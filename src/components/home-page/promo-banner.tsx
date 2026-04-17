@@ -50,24 +50,26 @@ export async function PromoBanner() {
   return (
     <div className={promoBannerOuter}>
       <div className={promoBannerInner}>
-        <p
-          className={`flex ${promoBannerContentMinHeight} flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-center text-sm text-foreground`}
+        <div
+          className={`flex ${promoBannerContentMinHeight} items-center justify-center`}
         >
-          <span className="font-semibold">{promo.title}</span>
-          <span className="text-muted-foreground">&middot;</span>
-          <span className="text-muted-foreground">{promo.description}</span>
-          {promo.code && (
-            <>
-              <span className="text-muted-foreground">&middot;</span>
-              <span className="inline-flex items-center gap-1">
-                <span className="text-muted-foreground text-xs">Code:</span>
-                <code className="rounded bg-background border border-border px-2 py-0.5 text-xs font-mono font-semibold tracking-wide text-foreground">
-                  {promo.code}
-                </code>
-              </span>
-            </>
-          )}
-        </p>
+          <p className="text-center text-sm leading-snug text-foreground">
+            <span className="font-semibold">{promo.title}</span>
+            <span className="text-muted-foreground">{"\u00A0·\u00A0"}</span>
+            <span className="text-muted-foreground">{promo.description}</span>
+            {promo.code && (
+              <>
+                <span className="text-muted-foreground">{"\u00A0·\u00A0"}</span>
+                <span className="inline-flex items-center gap-1 align-middle">
+                  <span className="text-muted-foreground text-xs">Code:</span>
+                  <code className="rounded bg-background border border-border px-2 py-0.5 text-xs font-mono font-semibold tracking-wide text-foreground">
+                    {promo.code}
+                  </code>
+                </span>
+              </>
+            )}
+          </p>
+        </div>
       </div>
     </div>
   );
