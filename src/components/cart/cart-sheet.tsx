@@ -38,7 +38,7 @@ export function CartSheet() {
       >
         <ShoppingBagIcon />
         {(cart?.totalItems ?? 0) > 0 && (
-          <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold leading-none text-accent-foreground">
+          <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold leading-none text-accent-foreground">
             {(cart?.totalItems ?? 0) > 99 ? "99+" : cart?.totalItems}
           </span>
         )}
