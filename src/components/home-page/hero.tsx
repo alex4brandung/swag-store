@@ -50,7 +50,7 @@ export function Hero() {
 
             <Link
               href="/search"
-              className="mt-10 inline-flex items-center gap-2 rounded-lg bg-accent text-accent-foreground font-semibold px-6 py-3 text-sm hover:bg-accent/90 transition-colors"
+              className="mt-10 inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
               Browse All Products
               <ArrowRightIcon />

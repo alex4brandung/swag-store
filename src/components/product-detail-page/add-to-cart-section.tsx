@@ -1,7 +1,7 @@
 import { getProductStock } from "@/lib/api";
 import { cacheLife, cacheTag } from "next/cache";
-import { AddToCartButton } from "./add-to-cart-button";
-import { StockIndicator } from "./stock-indicator";
+import { AddToCartButton } from "@/components/product-detail-page/add-to-cart-button";
+import { StockIndicator } from "@/components/product-detail-page/stock-indicator";
 import type { StockInfo } from "@/lib/types";
 
 type AddToCartSectionProps = {

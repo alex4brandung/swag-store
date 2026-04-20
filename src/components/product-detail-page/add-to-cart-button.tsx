@@ -4,8 +4,8 @@ import { useState } from "react";
 import { addToCartAction } from "@/lib/cart-actions";
 import { SpinnerIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import { useCart } from "./cart/cart-context";
-import { QuantitySelector } from "./quantity-selector";
+import { useCart } from "@/components/cart/cart-context";
+import { QuantitySelector } from "@/components/quantity-selector";
 
 type AddToCartButtonProps = {
   productId: string;
@@ -52,6 +52,7 @@ export function AddToCartButton({
       )}
 
       <Button
+        variant="primary"
         onClick={handleAddToCart}
         disabled={!inStock || isLoading}
         aria-label={!inStock ? "Add to cart — out of stock" : undefined}

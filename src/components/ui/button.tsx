@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 const buttonVariantClasses = {
   default:
     "bg-accent text-accent-foreground font-semibold hover:bg-accent/90",
+  primary:
+    "bg-primary text-primary-foreground font-semibold hover:bg-primary/90",
   outline: "border border-border bg-transparent text-foreground hover:bg-muted",
   muted: "border border-border bg-muted text-foreground hover:bg-muted/80",
   ghost: "text-muted-foreground hover:text-foreground hover:bg-muted/60",

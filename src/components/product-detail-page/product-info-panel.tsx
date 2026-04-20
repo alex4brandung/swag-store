@@ -1,7 +1,7 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { Suspense } from "react";
 import type { Product } from "@/lib/types";
-import { ProductPurchaseSection } from "@/components/product-detail-page/product-purchase-section";
+import { AddToCartSection } from "@/components/product-detail-page/add-to-cart-section";
 import { ProductTags } from "@/components/product-detail-page/product-tags";
 import { ProductSummary } from "@/components/product-detail-page/product-summary";
 
@@ -43,7 +43,7 @@ export async function ProductInfoPanel({ product }: ProductInfoPanelProps) {
     <div className="flex flex-col gap-6">
       <ProductMetaSection product={product} />
       <Suspense fallback={<ProductPurchaseSectionFallback />}>
-        <ProductPurchaseSection productId={product.id} slug={product.slug} />
+        <AddToCartSection productId={product.id} slug={product.slug} />
       </Suspense>
     </div>
   );
