@@ -34,7 +34,7 @@ export function ProductCard({ product, imageLoading = "lazy" }: ProductCardProps
           <span className="text-xs text-muted-foreground uppercase tracking-wide">
             {product.category}
           </span>
-          <h3 className="text-sm font-medium text-foreground group-hover:text-accent transition-colors leading-snug">
+          <h3 className="text-sm font-medium text-foreground leading-snug">
             {product.name}
           </h3>
           <p className="mt-auto pt-2 text-sm font-semibold text-foreground">
