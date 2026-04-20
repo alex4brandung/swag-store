@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vercel Swag Store
 
-## Getting Started
+A Next.js 16 storefront demo for the Vercel Partner Certification assignment.
 
-First, run the development server:
+The app implements:
+
+- Homepage with hero, promo banner, and featured products
+- Search page with URL-driven filters (`q`, `category`)
+- Product detail pages with stock state and add-to-cart
+- Session-based cart with add, update, remove, and persisted token cookie
+- Cache Components (`"use cache"`), Suspense boundaries, and Server Actions
+
+## Tech Stack
+
+- Next.js `16.2.4` (App Router)
+- React `19.2.4`
+- TypeScript `5`
+- Tailwind CSS `4`
+
+## Prerequisites
+
+- Node.js `>= 20` (Node `24 LTS` recommended)
+- `pnpm` (lockfile is included as `pnpm-lock.yaml`)
+
+## Environment Variables
+
+Copy the example file and fill in the required values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Variable | Required | Description |
+| --- | --- | --- |
+| `SWAG_API_BASE_URL` | Yes | Base URL of the Swag Store API |
+| `SWAG_API_BYPASS_TOKEN` | Yes | Token sent as `x-vercel-protection-bypass` header |
+| `NEXT_PUBLIC_SITE_URL` | No | Canonical site URL for metadata/OG |
+| `SWAG_DEBUG_TIMINGS` | No | Set to `1` to log API request timings on the server |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+If required env vars are missing, the app throws at runtime and logs a helpful warning from `src/lib/api.ts`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local Development
 
-## Learn More
+Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Start the dev server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `pnpm dev` - start development server
+- `pnpm build` - create production build
+- `pnpm start` - run production build
+- `pnpm lint` - run ESLint
+
+## Routes
+
+- `/` - landing page with promo + featured products
+- `/search` - search and category-filtered browse
+- `/products/[slug]` - product detail page
+
+## Architecture Notes
+
+For deeper implementation details, see:
+
+- `docs/ARCHITECTURE.md` - full architecture and decision rationale
+- `docs/USE_CACHE.md` - complete map of `"use cache"` usage and invalidation
+- `docs/assignment/assignment.md` - original assignment brief
+
+## Deployment
+
+This project is intended for deployment on Vercel.
+
+Before deploying, make sure the required environment variables are set in your Vercel project settings.
