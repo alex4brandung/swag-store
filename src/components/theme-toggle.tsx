@@ -8,9 +8,8 @@ export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const moonSize = 18;
   const sunSize = 22;
-
   const isDark = resolvedTheme === "dark";
-  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+  const label = "Toggle theme";
 
   return (
     <Button
