@@ -78,6 +78,6 @@ For deeper implementation details, see:
 
 ## Deployment
 
-This project is intended for deployment on Vercel.
+This project is deployed on Vercel:
 
-Before deploying, make sure the required environment variables are set in your Vercel project settings.
+- [https://swag-store-mu.vercel.app/](https://swag-store-mu.vercel.app/)
