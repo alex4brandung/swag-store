@@ -11,7 +11,7 @@ import { cacheLife, cacheTag } from "next/cache";
 
 const ENABLE_API_TIMINGS = process.env.SWAG_DEBUG_TIMINGS === "1";
 
-class ApiRequestError extends Error {
+export class ApiRequestError extends Error {
   status?: number;
 
   constructor(message: string, status?: number) {
@@ -19,6 +19,18 @@ class ApiRequestError extends Error {
     this.name = "ApiRequestError";
     this.status = status;
   }
+}
+
+export function isCartTokenInvalidError(error: unknown): boolean {
+  if (!(error instanceof ApiRequestError)) {
+    return false;
+  }
+
+  if (error.status !== 404) {
+    return false;
+  }
+
+  return error.message.toLowerCase().includes("cart");
 }
 
 function getRequestMethod(options: RequestInit): string {

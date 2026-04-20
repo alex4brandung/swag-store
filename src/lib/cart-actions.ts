@@ -6,6 +6,7 @@ import {
   addItemToCart,
   createCart,
   getCart as fetchCart,
+  isCartTokenInvalidError,
   removeCartItem as removeItem,
   updateCartItem as updateItem,
 } from "@/lib/api";
@@ -17,6 +18,7 @@ type CartActionResult =
 
 const CART_TOKEN_COOKIE = "cart-token";
 const MAX_QUANTITY = 99;
+const CART_TOKEN_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
 function updateProductStockTags(
   productId: string,
@@ -41,20 +43,35 @@ async function getCartToken(): Promise<string | null> {
   return cookieStore.get(CART_TOKEN_COOKIE)?.value ?? null;
 }
 
-async function ensureCart(): Promise<string> {
+async function persistCartToken(token: string): Promise<void> {
   const cookieStore = await cookies();
-  const existing = cookieStore.get(CART_TOKEN_COOKIE)?.value;
-  if (existing) return existing;
-
-  const { token } = await createCart();
   cookieStore.set(CART_TOKEN_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: CART_TOKEN_MAX_AGE_SECONDS,
   });
+}
+
+async function clearCartToken(): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.delete(CART_TOKEN_COOKIE);
+}
+
+async function createAndPersistCart(): Promise<string> {
+  const { token } = await createCart();
+  await persistCartToken(token);
   return token;
+}
+
+async function ensureCart(options?: { forceNew?: boolean }): Promise<string> {
+  const cookieStore = await cookies();
+  const forceNew = options?.forceNew ?? false;
+  const existing = cookieStore.get(CART_TOKEN_COOKIE)?.value;
+  if (existing && !forceNew) return existing;
+
+  return createAndPersistCart();
 }
 
 export async function getCartAction(): Promise<CartWithProducts | null> {
@@ -62,7 +79,10 @@ export async function getCartAction(): Promise<CartWithProducts | null> {
   if (!token) return null;
   try {
     return await fetchCart(token);
-  } catch {
+  } catch (error) {
+    if (isCartTokenInvalidError(error)) {
+      await clearCartToken();
+    }
     return null;
   }
 }
@@ -86,6 +106,25 @@ export async function addToCartAction(
     updateProductStockTags(productId, productSlug);
     return { success: true, cart };
   } catch (err) {
+    if (isCartTokenInvalidError(err)) {
+      try {
+        await clearCartToken();
+        const freshToken = await ensureCart({ forceNew: true });
+        const cart = await addItemToCart(freshToken, productId, quantity);
+        updateTag(`cart-${freshToken}`);
+        updateProductStockTags(productId, productSlug);
+        return { success: true, cart };
+      } catch (retryError) {
+        return {
+          success: false,
+          error:
+            retryError instanceof Error
+              ? retryError.message
+              : "Failed to add to cart",
+        };
+      }
+    }
+
     return {
       success: false,
       error: err instanceof Error ? err.message : "Failed to add to cart",
@@ -113,6 +152,14 @@ export async function updateCartItemAction(
     updateProductStockTags(productId, productSlug);
     return { success: true, cart };
   } catch (err) {
+    if (isCartTokenInvalidError(err)) {
+      await clearCartToken();
+      return {
+        success: false,
+        error: "Your cart expired. Please add an item again.",
+      };
+    }
+
     return {
       success: false,
       error: err instanceof Error ? err.message : "Failed to update cart",
@@ -136,6 +183,14 @@ export async function removeCartItemAction(
     updateProductStockTags(productId, productSlug);
     return { success: true, cart };
   } catch (err) {
+    if (isCartTokenInvalidError(err)) {
+      await clearCartToken();
+      return {
+        success: false,
+        error: "Your cart expired. Please add an item again.",
+      };
+    }
+
     return {
       success: false,
       error: err instanceof Error ? err.message : "Failed to remove item",
