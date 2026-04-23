@@ -14,7 +14,7 @@ async function getCachedProductStock(
   slug: string
 ): Promise<StockInfo> {
   "use cache";
-  cacheLife("minutes");
+  cacheLife("seconds");
   cacheTag(`product-stock-${productId}`);
   cacheTag(`product-stock-${slug}`);
   return getProductStock(slug);
