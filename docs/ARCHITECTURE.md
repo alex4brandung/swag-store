@@ -96,7 +96,7 @@ Search state is URL-based (`q`, `category`) for shareability and refresh persist
   - updates `category` param
   - syncs with browser navigation (`popstate`)
 - `SearchResultsContent`:
-  - uses `searchProducts`
+  - uses `searchProducts` (delegates to `getProductsWithMeta` so the product list cache applies, including when switching `category` in the URL)
   - result limit is `5` when text search is active, otherwise `9`
 
 ## Metadata

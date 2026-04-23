@@ -15,6 +15,7 @@ This file documents every current cache entry point and related invalidation tag
 | Function | Purpose | Cache controls |
 | --- | --- | --- |
 | `getProductsWithMeta(params)` | Product list fetching (homepage/search/static params) | `cacheLife("minutes")`, `cacheTag("products")`, optional category/featured tags |
+| `searchProducts(params)` | Search page list (same API as `getProductsWithMeta`) | delegates to `getProductsWithMeta` — shared cache, so category / query combinations revalidate with the `minutes` profile |
 | `getProduct(idOrSlug)` | Product detail fetch | `cacheLife("hours")`, `cacheTag("products")`, `cacheTag(\`product:${...}\`)` |
 | `getCategories()` | Categories for search filters | `cacheLife("days")`, `cacheTag("categories")` |
 | `getPromotion()` | Promotion banner payload | `cacheLife("hours")`, `cacheTag("promotions")` |
@@ -26,7 +27,7 @@ This file documents every current cache entry point and related invalidation tag
 | `home-page/featured-products.tsx` | `FeaturedProducts` render/data slice | `cacheLife("minutes")`, `cacheTag("products")`, `cacheTag("products:featured:true")` |
 | `home-page/promo-banner.tsx` | `PromoBanner` render/data slice | `cacheLife("hours")`, `cacheTag("promotions")` |
 | `product-detail-page/product-info-panel.tsx` | `ProductMetaSection` (summary/tags) | `cacheLife("hours")`, `cacheTag("products")`, product tag |
-| `add-to-cart-section.tsx` | `getCachedProductStock(productId, slug)` | `cacheLife("minutes")`, `cacheTag(\`product-stock-${productId}\`)`, `cacheTag(\`product-stock-${slug}\`)` |
+| `add-to-cart-section.tsx` | `getCachedProductStock(productId, slug)` | `cacheLife("seconds")`, `cacheTag(\`product-stock-${productId}\`)`, `cacheTag(\`product-stock-${slug}\`)` |
 | `search-page/search-controls.tsx` | `SearchControls` category fetch/render | `cacheLife("days")`, `cacheTag("categories")` |
 | `header.tsx` | `fetchCachedCart(token)` | `cacheTag(token ? \`cart-${token}\` : "cart")` |
 | `footer.tsx` | `Footer` output (year/date usage) | `cacheLife("days")` |
@@ -35,7 +36,7 @@ This file documents every current cache entry point and related invalidation tag
 
 | Location | Reason |
 | --- | --- |
-| `search-page/search-results-content.tsx` (`searchProducts`) | Search results should reflect the latest query/category inputs without additional component-level caching. |
+| `search-page/search-results-content.tsx` | The async component has no extra `"use cache"` wrapper; list data is still cached via `searchProducts` → `getProductsWithMeta` (per request args, `cacheLife("minutes")`). |
 | Cart write operations in `lib/cart-actions.ts` | Mutations must execute fresh and then invalidate affected tags. |
 
 ## Invalidation map (`updateTag`)
