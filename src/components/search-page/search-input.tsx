@@ -44,13 +44,6 @@ export function SearchInput() {
     }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      navigate(value);
-    }
-  }
-
   function handleSearch() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     navigate(value);
@@ -62,23 +55,33 @@ export function SearchInput() {
     navigate("");
   }
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    handleSearch();
+  }
+
   return (
-    <div className="relative flex items-center gap-2">
+    <form
+      role="search"
+      className="relative flex items-center gap-2"
+      onSubmit={handleSubmit}
+    >
       <div className="relative flex-1">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
           <SearchIcon />
         </div>
         <Input
           type="search"
+          name="q"
           value={value}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
           placeholder="Search products..."
           aria-label="Search products"
           className="pl-10 pr-10"
         />
         {value && (
           <Button
+            type="button"
             variant="ghost"
             onClick={handleClear}
             aria-label="Clear search"
@@ -88,11 +91,7 @@ export function SearchInput() {
           </Button>
         )}
       </div>
-      <Button
-        onClick={handleSearch}
-      >
-        Search
-      </Button>
-    </div>
+      <Button type="submit">Search</Button>
+    </form>
   );
 }

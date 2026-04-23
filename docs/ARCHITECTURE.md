@@ -88,8 +88,8 @@ Behavior:
 Search state is URL-based (`q`, `category`) for shareability and refresh persistence.
 
 - `SearchInput`:
-  - Enter submits immediately
-  - Search button submits immediately
+  - `<form role="search">` with `name="q"`; `onSubmit` runs client navigation (still merges existing query params such as `category`)
+  - Enter or Search submits the form (debounced typing unchanged)
   - Debounced auto-search (400ms) when input length is `>= 3` or cleared
 - `CategoryFilter`:
   - updates `category` param
