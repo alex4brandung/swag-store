@@ -36,7 +36,7 @@ async function CartWrapper() {
 
 function CartFallback() {
   return (
-    <div className="relative flex items-center text-foreground/80">
+    <div className="relative flex h-8 w-8 items-center justify-center text-muted-foreground">
       <ShoppingBagIcon />
     </div>
   );
