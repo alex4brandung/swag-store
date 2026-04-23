@@ -1,25 +1,17 @@
 import { getPromotion } from "@/lib/api";
-import { cacheLife, cacheTag } from "next/cache";
 
 /** Matches loaded banner: ~74px inner row, ~100px total with py-3 + border-y. */
-const promoBannerContentMinHeight =
-  "min-h-[74px] sm:min-h-11";
+const promoBannerContentMinHeight = "min-h-[74px] sm:min-h-11";
 
-const promoBannerOuter =
-  "border-y border-border bg-muted py-3";
-const promoBannerInner =
-  "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8";
+const promoBannerOuter = "border-y border-border bg-muted py-3";
+const promoBannerInner = "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8";
 
 /** Same vertical footprint as the loaded banner so Suspense does not shift the hero. */
 export function PromoBannerSkeleton() {
   return (
     <div className={promoBannerOuter}>
       <div className={promoBannerInner}>
-        <div
-          className="w-full"
-          aria-busy
-          aria-label="Loading promotion"
-        >
+        <div className="w-full" aria-busy aria-label="Loading promotion">
           <div
             className={`flex flex-col items-center justify-center gap-1.5 sm:hidden ${promoBannerContentMinHeight}`}
           >
@@ -39,10 +31,6 @@ export function PromoBannerSkeleton() {
 }
 
 export async function PromoBanner() {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("promotions");
-
   const promo = await getPromotion();
 
   if (!promo || !promo.active) return null;

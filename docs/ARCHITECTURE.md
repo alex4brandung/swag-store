@@ -42,7 +42,7 @@ Key boundaries:
 
 ### `/search`
 
-- `SearchControls` (cached categories fetch) inside Suspense.
+- `SearchControls` (`getCategories()` from `api` — data-layer cache) inside Suspense.
 - `SearchResults` awaits `searchParams`, then renders keyed Suspense:
   - key is `${q ?? ""}-${category ?? ""}` to force fallback on query/category changes.
   - content rendered by `SearchResultsContent`.
@@ -52,19 +52,18 @@ Key boundaries:
 - `generateStaticParams` builds slugs from paginated products.
 - `generateMetadata` fetches product-specific SEO metadata.
 - Page body renders `ProductInfoPanel`, which includes:
-  - cached product meta section (`ProductMetaSection`)
-  - purchase section (`ProductPurchaseSection` -> `AddToCartSection`) behind Suspense.
+  - summary/tags (`ProductMetaSection`; product payload from cached `getProduct(slug)`)
+  - purchase section (`AddToCartSection`) behind Suspense (cached stock fetch, short TTL).
 
 ## Cache Components Strategy
 
 `next.config.ts` enables `cacheComponents: true`.
 
-Caching is applied close to usage sites. There are two layers:
+1. **`lib/api.ts`** — primary cache for catalog data (`getProductsWithMeta`, `getProduct`, `getCategories`, `getPromotion`).
+2. **Colocated helpers** — cart (`fetchCachedCart` in `header.tsx`) and stock (`getCachedProductStock` in `add-to-cart-section.tsx`) where lifetimes/tags differ from catalog APIs.
+3. **`footer.tsx`** — optional static shell (`cacheLife("days")`) without an API round-trip.
 
-1. `lib/api.ts` caches API resources where globally reusable.
-2. Components add contextual caching (lifetime/tags) where view-specific.
-
-See `docs/USE_CACHE.md` for the exact inventory.
+See `docs/USE_CACHE.md` for the inventory and **data vs UI layer** guidance.
 
 ## Server Actions and Cart Flow
 

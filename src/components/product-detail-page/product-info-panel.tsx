@@ -1,4 +1,3 @@
-import { cacheLife, cacheTag } from "next/cache";
 import { Suspense } from "react";
 import type { Product } from "@/lib/types";
 import { AddToCartSection } from "@/components/product-detail-page/add-to-cart-section";
@@ -18,12 +17,7 @@ function ProductPurchaseSectionFallback() {
   );
 }
 
-async function ProductMetaSection({ product }: ProductInfoPanelProps) {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("products");
-  cacheTag(`product:${encodeURIComponent(product.slug.toLowerCase())}`);
-
+function ProductMetaSection({ product }: ProductInfoPanelProps) {
   return (
     <>
       <ProductSummary
@@ -38,7 +32,7 @@ async function ProductMetaSection({ product }: ProductInfoPanelProps) {
   );
 }
 
-export async function ProductInfoPanel({ product }: ProductInfoPanelProps) {
+export function ProductInfoPanel({ product }: ProductInfoPanelProps) {
   return (
     <div className="flex flex-col gap-6">
       <ProductMetaSection product={product} />
